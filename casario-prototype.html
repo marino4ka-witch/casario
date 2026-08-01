@@ -279,7 +279,10 @@
   @keyframes ringspin{0%{transform:rotate(0);stroke-dashoffset:70}55%{stroke-dashoffset:0}100%{transform:rotate(360deg);stroke-dashoffset:0}}
   @keyframes housepop{0%{opacity:0;transform:scale(.35)}100%{opacity:1;transform:scale(1)}}
   .swm{font-size:30px;font-weight:800;letter-spacing:.4px;color:#eaf6ff;animation:sfade .8s ease .45s both}
-  .swm span{color:#3fc4f5}
+  .swm .b{color:#3fc4f5}
+.swm .w{color:#eaf6ff}
+.swm .bi{position:relative}
+.swm .bi::after{content:"";position:absolute;left:50%;transform:translateX(-50%);top:-.04em;width:.15em;height:.15em;border-radius:50%;background:#3fc4f5}
   .sload{width:120px;height:4px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
   .sload i{display:block;height:100%;width:38%;background:#3fc4f5;border-radius:3px;animation:loadbar 1.5s ease-in-out infinite}
   @keyframes loadbar{0%{margin-left:-40%}100%{margin-left:102%}}
@@ -825,7 +828,7 @@
       <path d="M34 64 L34 50 L50 37 L66 50 L66 64 Z" fill="url(#cg)" class="house"/>
       <rect x="45" y="53" width="10" height="11" rx="2.5" fill="#0a2233" class="house"/>
     </svg>
-    <div class="swm"><span>Cas</span>ario</div>
+    <div class="swm"><span class="b">Casa</span><span class="w">r<span class="bi">ı</span>o</span></div>
     <div class="sload"><i></i></div>
   </div>
   <div class="topbar">
