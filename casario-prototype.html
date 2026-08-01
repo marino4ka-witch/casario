@@ -818,6 +818,8 @@
 .cclock2 .cc2-t{font-size:31px;letter-spacing:1px}
 .cw-t{font-size:28px}
 @media (max-width:380px){.cinfo{flex-wrap:wrap}.cinfo-w{flex-basis:100%;border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:10px}}
+
+.adcard.featured{border:1.5px solid var(--gold);box-shadow:0 0 0 1px var(--gold),0 6px 20px rgba(221,134,54,.25)}
 </style>
 
 <div class="app">
@@ -1079,11 +1081,11 @@
     <div class="adslot">
       <div class="adslot-track"><span class="adtag">Реклама</span><div class="adslot-slides"></div></div>
       <div class="adslot-dots"></div>
-      <div class="adpromo"><span>📣 Ваша реклама здесь — <b>$100 / 3 суток</b></span><button type="button" class="adPromoBtn">Связаться</button></div>
+      <div class="adpromo"><span>📣 Ваша реклама здесь — <b>$200 / 3 суток</b></span><button type="button" class="adPromoBtn">Связаться</button></div>
     </div>
     <div class="paybar">
-      <button class="cta" id="payBtn">🚗 Выезд агента на объект <span class="price">от $100</span></button>
-      <div class="cta-note">✅ Подбор оплачен · выезд в черте города — от $100 за объект</div>
+      <button class="cta" id="payBtn">🚗 Выезд агента на объект <span class="price">от $200</span></button>
+      <div class="cta-note">✅ Подбор оплачен · выезд в черте города — от $200 за объект</div>
     </div>
   </section>
 
@@ -1094,10 +1096,10 @@
     <div class="homehero">
       <h1>¡Bienvenidos, amigos! 🌎🏡</h1>
       <p class="hlead"><b>Добро пожаловать домой</b> — даже если вы только собираетесь его найти.</p>
-      <p><b>Casario — первый русскоязычный сервис</b>, который собирает всё необходимое для жизни и переезда в Латинскую Америку в одном месте. Больше не нужно неделями разбираться в испаноязычных сайтах, сравнивать десятки объявлений, искать юристов и переводчиков, бояться мошенников и подписывать договор, половину которого вы не поняли.</p>
+      <p><b>Casario — первый сервис</b>, который собирает всё необходимое для жизни и переезда в Латинскую Америку в одном месте. Больше не нужно неделями разбираться в испаноязычных сайтах, сравнивать десятки объявлений, искать юристов и переводчиков, бояться мошенников и подписывать договор, половину которого вы не поняли.</p>
       <p>Наши <b>AI-агенты</b> ищут жильё по локальным площадкам, переводят объявления и отсеивают сомнительное — оставляя лучшие предложения именно под ваш запрос. Квартиры, дома, отели, офисы и коммерческие помещения — для аренды, покупки, переезда или инвестиций. Актуальный курс валют, время и даже температура воздуха. Под рукой все службы спасения и специалисты: <b>няни, переводчики, юристы, врачи, доставка</b>.</p>
       <p><b>Casario — это гораздо больше, чем поиск недвижимости.</b> Вы узнаете, какие районы безопасны и что рядом с домом: аптеки, школы, супермаркеты, больницы, транспорт. <b>AI-юрист</b> прочитает договор, найдёт спорные условия и объяснит их человеческим языком. А в беседках стран можно напрямую спросить тех, кто уже живёт в Латаме — без туристических фильтров.</p>
-      <p>Время, погода, валюты, полезные контакты, экстренные службы, местные гиды и живое русскоязычное сообщество — <b>всё уже внутри</b>. Такого сочетания инструментов для русскоязычного переезда в Латинскую Америку сейчас нет.</p>
+      <p>Время, погода, валюты, полезные контакты, экстренные службы, местные гиды и живое сообщество — <b>всё уже внутри</b>. Такого сочетания инструментов для переезда в Латинскую Америку сейчас нет.</p>
       <p class="hclose"><b>Добро пожаловать в Casario.</b> Переезжайте уверенно. Осваивайтесь быстрее. Чувствуйте себя как дома.<br>Ну а мы — найдём место, в котором вам точно захочется остаться. Мы берём на себя сложности переезда, чтобы вы могли сосредоточиться на новой жизни.</p>
       <div class="conv">
         <div class="conv-h">💱 Конвертер валют <span class="hint">курс приблизительный · в проде обновляется live</span></div>
@@ -1214,7 +1216,7 @@
         </div>
       </div>
       <div id="chatSub">
-        <div class="chatrule">🛡️ Только общий чат, без личек. Без ссылок и продаж — для этого 📢 Объявления. Нарушение: предупреждение → бан (разбан $15).</div>
+        <div class="chatrule">🛡️ Только общий чат, без личек. Без ссылок и продаж — для этого 📢 Объявления. Нарушение: предупреждение → мут → бан на 3 суток; снять — через поддержку (бесплатно).</div>
         <div class="feed" id="feed"></div>
         <div class="composer">
           <input type="text" id="chatInput" maxlength="200" placeholder="Написать в беседку… (до 200)">
@@ -1224,7 +1226,7 @@
         <div class="adslot">
           <div class="adslot-track"><span class="adtag">Реклама</span><div class="adslot-slides"></div></div>
           <div class="adslot-dots"></div>
-          <div class="adpromo"><span>📣 Ваша реклама здесь — <b>$100 / 3 суток</b></span><button type="button" class="adPromoBtn">Связаться</button></div>
+          <div class="adpromo"><span>📣 Ваша реклама здесь — <b>$200 / 3 суток</b></span><button type="button" class="adPromoBtn">Связаться</button></div>
         </div>
       </div>
       <div id="adsSub" style="display:none">
@@ -1351,7 +1353,7 @@
       <div id="adBuyForm">
         <div style="font-size:30px">📣</div>
         <div class="un">Реклама в Casario</div>
-        <div class="ub">Ваш баннер видят релоканты по всей Латам — под подборкой и в Беседке.<br><b style="color:var(--accent)">$100 / 3 суток</b> · 7 для PRO · до 5 в сутки по кругу.</div>
+        <div class="ub">Ваш баннер видят релоканты по всей Латам — под подборкой и в Беседке.<br><b style="color:var(--accent)">$200 / 3 суток</b> · 7 для PRO · до 5 в сутки по кругу.</div>
         <button type="button" class="adinfo-btn" id="adInfoBtn">ⓘ Форматы и требования к материалам</button>
         <div class="adinfo" id="adInfoBox">
           <ul>
@@ -1401,7 +1403,7 @@
             <li>GPS-гид «Что рядом» без лимита</li>
             <li>AI-юрист по $1/час</li>
             <li><b>Подбор жилья: 20 ссылок в день</b> бесплатно</li>
-            <li><b>До 2 объявлений в день бесплатно</b> (услуги и куплю-продам)</li>
+            <li><b>Поднятие объявлений бесплатно</b> · подача бесплатна для всех</li>
             <li>Без рекламы · приоритетная выдача</li>
           </ul>
         </div>
@@ -1410,7 +1412,7 @@
       <div class="pro-note">⚠️ В PRO <b>не входят</b> риелторские услуги и услуги переводчика (выезд агента) — оплачиваются отдельно по обычному тарифу.</div>
       <ul class="tariffs" style="margin-top:4px">
         <li class="tf"><button type="button" class="tf-row"><span class="tf-n">💡 Почему «Кочевник» выгоден?</span><span class="tf-p" style="color:var(--muted);font-size:11px">подробнее</span></button>
-          <div class="tf-det"><p class="pitch">«Кочевник» — это швейцарский нож релоканта: всё для жизни в Латаме в одном приложении и на русском. Больше не нужно рыскать по десяткам сайтов на испанском, переплачивать агентам-посредникам и бояться подписать кривой договор. Здесь вы за минуты находите жильё под бюджет, проверяете контракт с AI-юристом, видите, где безопасно и что рядом с домом, и общаетесь с теми, кто уже прошёл этот путь. Настроили один раз — приложение само присылает варианты, пока вы <b>живёте</b>, а не ищете. За цену пары чашек кофе в месяц вы экономите десятки часов, сотни долларов на посредниках и нервы на чужом языке. Такого «всё в одном» для русскоязычных в Латаме просто нет. 💡 Окупается за 1–2 использования.</p></div></li>
+          <div class="tf-det"><p class="pitch">«Кочевник» — это швейцарский нож релоканта: всё для жизни в Латаме в одном приложении. Больше не нужно рыскать по десяткам сайтов на испанском, переплачивать агентам-посредникам и бояться подписать кривой договор. Здесь вы за минуты находите жильё под бюджет, проверяете контракт с AI-юристом, видите, где безопасно и что рядом с домом, и общаетесь с теми, кто уже прошёл этот путь. Настроили один раз — приложение само присылает варианты, пока вы <b>живёте</b>, а не ищете. За цену пары чашек кофе в месяц вы экономите десятки часов, сотни долларов на посредниках и нервы на чужом языке. Такого «всё в одном» в Латаме просто нет. 💡 Окупается за 1–2 использования.</p></div></li>
       </ul>
 
       <div class="tariffs-h">🎁 Бесплатно</div>
@@ -1423,18 +1425,18 @@
       <ul class="tariffs">
         <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🔎 Подбор жилья<small>10 вариантов + прямые ссылки</small></span><span class="tf-p">$10</span></button>
           <div class="tf-det">AI обойдёт <b>все местные порталы</b> за вас и вернёт 10 проверенных вариантов под ваш бюджет и фильтры, с прямыми ссылками. Экономит <b>дни</b> ручного поиска на испанском.</div></li>
-        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">⚖️ AI-юрист<small>разбор договора · для PRO $1/час</small></span><span class="tf-p">$25</span></button>
-          <div class="tf-det">Фото договора → находит «тёмные места» и спорные пункты, даёт готовые правки. 1 час. Один плохой пункт стоит <b>сотни $</b> — тут $25. Для PRO — символический <b>$1/час</b>.</div></li>
-        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🚗 Выезд агента на объект<small>сопровождение-переводчик, от $100</small></span><span class="tf-p">от $100</span></button>
-          <div class="tf-det">Агент-переводчик сопровождает осмотр <b>до сделки</b> (~1,5 часа — успеете ~2 объекта). Каждый следующий час с вами — <b>+$100</b>. При <b>заключении сделки</b> агент будет рад чаевым <b>5% от стоимости аренды</b>.</div></li>
-        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🏷️ Объявление «Куплю-Продам»</span><span class="tf-p">$2</span></button>
-          <div class="tf-det">Ваше объявление видно и в общем чате (там трафик), и во вкладке «Объявления». Управление — в профиле.</div></li>
-        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🛠️ Объявление «Услуги»</span><span class="tf-p">$5</span></button>
-          <div class="tf-det">Реклама ваших услуг для релокантов (переводы, няня, ремонт…). Услугу в разделе «Куплю-Продам» размещать нельзя — бан.</div></li>
-        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🔓 Разбан в чате<small>после 2-го нарушения</small></span><span class="tf-p">$15</span></button>
-          <div class="tf-det">1-е нарушение правил (ссылки/продажи в чате) — предупреждение, 2-е — бан. Разбан — $15.</div></li>
-        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">📣 Реклама в приложении<small>3 суток · 7 для PRO</small></span><span class="tf-p">$100</span></button>
-          <div class="tf-det">Ваш баннер видят релоканты по всей Латам — под подборкой и в Беседке, с ротацией. <b>$100 / 3 суток</b>, для PRO — 7 суток. До 5 реклам в сутки по кругу.</div></li>
+        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">⚖️ AI-юрист<small>разбор договора · для PRO $1/час</small></span><span class="tf-p">$10</span></button>
+          <div class="tf-det">Фото договора → находит «тёмные места» и спорные пункты, даёт готовые правки. 1 час. Один плохой пункт стоит <b>сотни $</b> — тут $10. Для PRO — символический <b>$1/час</b>.</div></li>
+        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🚗 Выезд агента на объект<small>сопровождение-переводчик, от $200</small></span><span class="tf-p">от $200</span></button>
+          <div class="tf-det">Агент-переводчик сопровождает осмотр <b>до сделки</b> (~1,5 часа — успеете ~2 объекта). Каждый следующий час с вами — <b>+$200</b>. При <b>заключении сделки</b> агент будет рад чаевым <b>5% от стоимости аренды</b>.</div></li>
+        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🔼 Поднять объявление<small>подача — бесплатно</small></span><span class="tf-p">$2</span></button>
+          <div class="tf-det">Подача объявлений — бесплатно. «Поднять» ($2) снова выводит объявление наверх в чате и ленте. Управление — в профиле.</div></li>
+        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">⭐ Поднять + выделить<small>наверх и с рамкой</small></span><span class="tf-p">$5</span></button>
+          <div class="tf-det">«Поднять+выделить» ($5): объявление уходит наверх и получает золотую рамку — заметнее в ленте и чатах. Подача остаётся бесплатной.</div></li>
+        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">🛡️ Модерация чата<small>снять бан — бесплатно</small></span><span class="tf-p" style="font-size:12px">$0</span></button>
+          <div class="tf-det">Правила: 1-е нарушение — предупреждение, 2-е — мут на 1 час, 3-е — бан на 3 суток, далее — постоянный бан. Снять бан — только через поддержку (бесплатно).</div></li>
+        <li class="tf"><button type="button" class="tf-row"><span class="tf-n">📣 Реклама в приложении<small>3 суток · 7 для PRO</small></span><span class="tf-p">$200</span></button>
+          <div class="tf-det">Ваш баннер видят релоканты по всей Латам — под подборкой и в Беседке, с ротацией. <b>$200 / 3 суток</b>, для PRO — 7 суток. До 5 реклам в сутки по кругу.</div></li>
       </ul>
 
       <button class="cta" id="proSub" style="margin-top:14px">⭐ Оформить PRO · $30/мес</button>
@@ -1538,7 +1540,7 @@
     <div class="ucard wide">
       <div style="font-size:28px">💬</div>
       <div class="un">Чаты и группы по странам</div>
-      <div class="ub">Живое комьюнити русскоязычных релокантов — вступай и знакомься. Бесплатно.</div>
+      <div class="ub">Живое комьюнити релокантов — вступай и знакомься. Бесплатно.</div>
       <div id="chatsList" style="text-align:left"></div>
       <button class="cta ghost" id="chatsClose" style="margin-top:10px">Закрыть</button>
     </div>
@@ -1571,7 +1573,7 @@
       <div id="agentForm">
         <div style="font-size:30px">🚗</div>
         <div class="un">Заявка на выезд агента</div>
-        <div class="ub">Агент-переводчик сопроводит осмотр (от $100, в черте города). Оставьте заявку — свяжемся в ближайшее время.</div>
+        <div class="ub">Агент-переводчик сопроводит осмотр (от $200, в черте города). Оставьте заявку — свяжемся в ближайшее время.</div>
         <div class="field" style="margin-top:8px"><input type="text" id="agName" placeholder="ФИО"></div>
         <div class="field"><input type="text" id="agContact" placeholder="Контакт: Telegram / WhatsApp / телефон"></div>
         <div class="field"><textarea id="agMsg" placeholder="Что и где смотрим, для чего и в какое время нужен агент"></textarea></div>
@@ -2073,14 +2075,16 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   chatCountrySel.addEventListener('change',function(){ updCcFlag(); renderFeed(); if(typeof syncCat==='function') syncCat(); });
   renderFeed();
   var chatInput=document.getElementById('chatInput');
-  var warns=0;
+  var warns=LS.get('warns',0), muteUntil=LS.get('muteUntil',0), banUntil=LS.get('banUntil',0), banned=LS.get('banned',false);
+  function banState(){var now=Date.now();if(banned)return{b:true,msg:'🚫 Постоянный бан за систематические нарушения. Снять — только через поддержку (бесплатно).'};if(banUntil>now){var d=Math.ceil((banUntil-now)/86400000);return{b:true,msg:'🚫 Бан ещё '+d+' сут. за повторные нарушения.'};}if(muteUntil>now){var m=Math.ceil((muteUntil-now)/60000);return{b:true,msg:'🔇 Мут ещё '+m+' мин за нарушение правил.'};}return{b:false};}
+  function applyBan(){var st=banState();if(chatInput){chatInput.disabled=st.b;if(st.b)chatInput.placeholder=st.msg;}var cs=document.getElementById('chatSend');if(cs)cs.disabled=st.b;}
   function isSpam(v){ return /(https?:\/\/|www\.|t\.me\/|\b[\wа-я-]+\.(com|ru|net|org|uy|ar|cl|py|co|io|me))/i.test(v) || /(продам|продаю|прода[её]тся|куплю|услуг|сдам в аренд|массаж|доставка)/i.test(v); }
   function sendMsg(){
-    var v=chatInput.value.trim(); if(!v) return; v=v.slice(0,200);
+    var _bs=banState(); if(_bs.b){ toast(_bs.msg); return; } var v=chatInput.value.trim(); if(!v) return; v=v.slice(0,200);
     if(isSpam(v)){
-      warns++;
-      if(warns>=2) toast('🚫 Бан за 2-е нарушение. Разбан — $15 в Telegram Stars ⭐ (в демо чат остаётся активным)');
-      else toast('⚠️ Предупреждение: ссылки и продажи — только через 📢 Объявления');
+      warns++; LS.set('warns',warns);
+      if(warns>=4){banned=true;LS.set('banned',true);toast('🚫 Постоянный бан за систематические нарушения. Снять — через поддержку (бесплатно).');applyBan();} else if(warns===3){banUntil=Date.now()+3*86400000;LS.set('banUntil',banUntil);toast('🚫 Бан на 3 суток за 3-е нарушение. Ссылки/продажи — только через 📢 Объявления.');applyBan();} else if(warns===2){muteUntil=Date.now()+3600000;LS.set('muteUntil',muteUntil);toast('🔇 Мут на 1 час за 2-е нарушение. Ссылки/продажи — только через 📢 Объявления.');applyBan();}
+      else toast('⚠️ Предупреждение (1-е нарушение): ссылки/продажи — только через 📢 Объявления.');
       return;
     }
     var wrap=document.createElement('div'); wrap.innerHTML=msgHtml(['Вы',v,'сейчас','🟢','Это вы','😊'],true);
@@ -2089,6 +2093,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     node.scrollIntoView({block:'nearest'});
   }
   document.getElementById('chatSend').addEventListener('click',sendMsg);
+  applyBan();
   chatInput.addEventListener('keydown',function(e){ if(e.key==='Enter') sendMsg(); });
   // клик по собеседнику → попап профиля, реакции 👍👎
   var uModal=document.getElementById('uModal'), uReplyName='';
@@ -2168,7 +2173,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   var isPRO=LS.get('pro',false), freeAdsUsed=0;
   function curCat(){ var b=document.querySelector('#adCat button[aria-pressed=true]'); return b?b.getAttribute('data-cat'):'buy'; }
   function syncCat(){
-    var svc=curCat()==='svc'; adPriceLbl.textContent=(isPRO&&freeAdsUsed<2)?('Бесплатно · PRO '+freeAdsUsed+'/2'):(svc?'$5':'$2');
+    var svc=curCat()==='svc'; adPriceLbl.textContent='Бесплатно';
     var cc=chatCountrySel.value;
     adsFeed.querySelectorAll('.msg').forEach(function(m){
       var okCat=m.getAttribute('data-cat')===curCat();
@@ -2200,8 +2205,8 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   }
   // --- «мои объявления»: реестр, закрытие (продано/не актуально), актуализация ---
   var myAds=[], adSeq=0, myAdsList=document.getElementById('myAdsList');
-  function saveAds(){try{LS.set('ads',myAds.filter(function(r){return r.userMade;}).map(function(r){return {cat:r.cat,title:r.title,loc:r.loc,price:r.price,desc:r.desc,contact:r.contact,nP:r.nP,country:r.country,status:r.status,editable:r.editable};}));}catch(e){}}
-  function restoreAds(){try{var arr=LS.get('ads',[]);if(!arr||!arr.length)return;arr.forEach(function(a){var rec=registerMyAd(a.cat,a.title,a.loc,a.price,a.nP,a.contact,a.desc,a.country,a.editable);rec.userMade=true;if(a.status&&a.status!=='active'){rec.status=a.status;applyAdStatus(rec);}});renderMyAds();if(typeof syncCat==='function')syncCat();}catch(e){}}
+  function saveAds(){try{LS.set('ads',myAds.filter(function(r){return r.userMade;}).map(function(r){return {cat:r.cat,title:r.title,loc:r.loc,price:r.price,desc:r.desc,contact:r.contact,nP:r.nP,country:r.country,status:r.status,editable:r.editable,featured:!!r.featured};}));}catch(e){}}
+  function restoreAds(){try{var arr=LS.get('ads',[]);if(!arr||!arr.length)return;arr.forEach(function(a){var rec=registerMyAd(a.cat,a.title,a.loc,a.price,a.nP,a.contact,a.desc,a.country,a.editable);rec.userMade=true;if(a.featured){rec.featured=true;rec.nodes.forEach(function(n){var c=n.querySelector('.adcard');if(c)c.classList.add('featured');});}if(a.status&&a.status!=='active'){rec.status=a.status;applyAdStatus(rec);}});renderMyAds();if(typeof syncCat==='function')syncCat();}catch(e){}}
   function applyAdStatus(rec){
     rec.nodes.forEach(function(n){
       var card=n.querySelector('.adcard'); if(!card) return;
@@ -2213,10 +2218,10 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       }
     });
   }
-  function bumpAd(rec){ // «поднять» — снова в чаты (в конец = самое свежее)
+  function bumpAd(rec,feature){ if(feature){ rec.featured=true; rec.nodes.forEach(function(n){var c=n.querySelector('.adcard'); if(c) c.classList.add('featured');}); } // «поднять» — снова в чаты (в конец = самое свежее)
     if(rec.nodes[0]&&rec.nodes[0].parentNode) rec.nodes[0].parentNode.appendChild(rec.nodes[0]);
     if(rec.nodes[1]) feed.appendChild(rec.nodes[1]);
-    syncCat(); toast('Объявление снова вверху — ушло в чаты 🔼');
+    saveAds(); syncCat(); toast(feature?'Поднято и выделено · $5 в Telegram Stars ⭐ (демо)':'Поднято · $2 в Telegram Stars ⭐ (демо)');
   }
   function registerMyAd(cat,title,loc,price,nP,contact,desc,country,editable){
     var adCard=addAd(cat,title,loc,price,nP,contact,desc,country);
@@ -2264,7 +2269,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       var acts, win='';
       if(rec.status==='active'){
         var editBtn=rec.editable?'<button class="minibtn" data-a="edit">✏️ Изменить</button>':'';
-        acts='<button class="minibtn" data-a="bump">🔼 Актуализировать</button>'+editBtn+'<button class="minibtn" data-a="sold">✓ Продано</button><button class="minibtn" data-a="gone">✕ Не актуально</button>';
+        acts='<button class="minibtn pay" data-a="bump">🔼 Поднять · $2</button><button class="minibtn pay" data-a="boost">⭐ Поднять+выделить · $5</button>'+editBtn+'<button class="minibtn" data-a="sold">✓ Продано</button><button class="minibtn" data-a="gone">✕ Не актуально</button>';
         win=rec.editable?'<div class="myad-win">✏️ изменить можно в течение 3 ч после подачи</div>':'<div class="myad-win locked">🔒 редактирование закрыто (прошло 3 ч)</div>';
       } else {
         acts='<button class="minibtn pay" data-a="renew">↻ Подать заново · оплата ⭐</button>';
@@ -2274,7 +2279,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       el.querySelectorAll('.minibtn').forEach(function(btn){
         btn.addEventListener('click',function(){
           var a=btn.getAttribute('data-a');
-          if(a==='bump'){ bumpAd(rec); }
+          if(a==='bump'){ bumpAd(rec,false); } else if(a==='boost'){ bumpAd(rec,true); }
           else if(a==='edit'){ if(!rec.editable){ toast('Прошло 3 ч — редактирование закрыто'); return; } rec.editing=true; renderMyAds(); }
           else if(a==='sold'){ rec.status='sold'; applyAdStatus(rec); renderMyAds(); saveAds(); toast('«Продано» — больше не побеспокоят'); }
           else if(a==='gone'){ rec.status='gone'; applyAdStatus(rec); renderMyAds(); saveAds(); toast('«Не актуально» — объявление закрыто'); }
@@ -2330,8 +2335,8 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var proFree=isPRO&&freeAdsUsed<2;
     var _r=registerMyAd(cat,text,loc,price,nP,contact,desc,chatCountrySel.value); _r.userMade=true; saveAds();
     adForm.classList.remove('open');
-    if(proFree){ freeAdsUsed++; syncCat(); toast('Опубликовано бесплатно · PRO «Кочевник» ('+freeAdsUsed+'/2 сегодня) 🆓 — управлять в профиле'); }
-    else { syncCat(); toast('Опубликовано · оплата '+(isSvc?'$5':'$2')+' в Telegram Stars ⭐ (демо) — управлять в профиле. PRO «Кочевник»: 2 в день бесплатно'); }
+    syncCat(); toast('Опубликовано бесплатно ✅ — управлять в «Профиль → Мои объявления». Поднять или выделить — там же.');
+    
   });
 
   // ---- профиль: список стран ----
@@ -2524,7 +2529,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   var paySub=document.getElementById('paySub');
   function showPaySub(){ paySub.style.display=''; paySub.scrollIntoView({behavior:'smooth',block:'nearest'}); }
   document.getElementById('proSub').addEventListener('click',function(){ if(paySub.style.display==='none') showPaySub(); else paySub.style.display='none'; });
-  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; proModal.classList.remove('show'); paySub.style.display='none'; isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('Оформлено «Кочевник» $30/мес — оплата: '+b.getAttribute('data-m')+' ✅ · теперь до 2 объявлений в день бесплатно'); });
+  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; proModal.classList.remove('show'); paySub.style.display='none'; isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('Оформлено «Кочевник» $30/мес — оплата: '+b.getAttribute('data-m')+' ✅ · поднятие объявлений бесплатно'); });
   document.getElementById('payMethodClose').addEventListener('click',function(){ payMethodModal.classList.remove('show'); });
   document.getElementById('payCard').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата картой — «Кочевник» $30/мес 💳'); });
   document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата Telegram Stars — «Кочевник» $30/мес ⭐'); });
@@ -3014,12 +3019,12 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     function aiReply(html){ if(closed) return; setTimeout(function(){ if(!closed) bub('ai',html); },700); }
     function closeSession(){ if(closed) return; setLocked(true);
       var row=bub('ai','⏳ <b>Час разбора истёк — консультация закрыта юристом.</b> Разбор сохранён. Нужен ещё час — новая оплата по полной стоимости.');
-      var b=document.createElement('button'); b.className='cta'; b.style.marginTop='9px'; b.textContent='⭐ Купить ещё час · $25';
+      var b=document.createElement('button'); b.className='cta'; b.style.marginTop='9px'; b.textContent='⭐ Купить ещё час · $10';
       b.addEventListener('click',buyMore); row.querySelector('.lwbub').appendChild(b);
     }
-    function buyMore(){ remain=60*60; setLocked(false); paintTimer(); toast('Оплачено $25 ⭐ — ещё 1 час разбора'); bub('ai','✅ Оплата принята — новый час разбора. Продолжаем 🤝'); }
+    function buyMore(){ remain=60*60; setLocked(false); paintTimer(); toast('Оплачено $10 ⭐ — ещё 1 час разбора'); bub('ai','✅ Оплата принята — новый час разбора. Продолжаем 🤝'); }
     // приветствие: спрашиваем страну + краткое описание ситуации
-    bub('ai','🛡️ <b>Оплата $25 подтверждена.</b> Я — AI-юрист Casario, помогаю по вашей сделке <b>1 час</b> (можно продлить). Отвечаю на <b>русском, английском и испанском</b>.<br>Чтобы разобрать точно, укажите: 🌍 <b>страну</b> (право различается) и кратко — <b>вашу ситуацию</b> и в чём нужна помощь. Можно прислать <b>фото или PDF</b> договора.<br><i>Напр.: «Аргентина, снимаю квартиру — проверьте договор, боюсь скрытых пунктов».</i>',{sys:true,time:'09:28'});
+    bub('ai','🛡️ <b>Оплата $10 подтверждена.</b> Я — AI-юрист Casario, помогаю по вашей сделке <b>1 час</b> (можно продлить). Отвечаю на <b>русском, английском и испанском</b>.<br>Чтобы разобрать точно, укажите: 🌍 <b>страну</b> (право различается) и кратко — <b>вашу ситуацию</b> и в чём нужна помощь. Можно прислать <b>фото или PDF</b> договора.<br><i>Напр.: «Аргентина, снимаю квартиру — проверьте договор, боюсь скрытых пунктов».</i>',{sys:true,time:'09:28'});
     bub('me','Аргентина, Буэнос-Айрес. Снимаю квартиру — есть ли тёмные места в договоре?<div class="lwphoto" style="margin-top:7px">📄</div>',{time:'09:29'});
     bub('ai','📸 Фото нечёткое — часть текста не читается (мелкий шрифт + блик снизу). Пришлите ещё раз при хорошем свете, без бликов, чтобы пункт целиком попал в кадр.',{time:'09:29'});
     bub('me','<div class="lwphoto">📃</div>Так лучше?',{time:'09:30'});
