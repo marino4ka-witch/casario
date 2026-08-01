@@ -9,6 +9,7 @@
 <body>
 <script>/* Casario backend config — anon key is public-safe (RLS protects data). NEVER put the service_role key here. */
 window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPABASE_ANON:"sb_publishable_8Hh9uzl9_Agd6rTR7AKiBQ_jxN_rhC6"};</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --bg:#eef3f2; --surface:#ffffff; --surface-2:#e7efed; --ink:#152420;
@@ -1628,6 +1629,15 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
 <script>
 (function(){
   "use strict";
+  var _CFG=window.CASARIO_CFG||{}; var SB=null;
+  try{ if(_CFG.SUPABASE_URL&&_CFG.SUPABASE_ANON&&window.supabase&&window.supabase.createClient){ SB=window.supabase.createClient(_CFG.SUPABASE_URL,_CFG.SUPABASE_ANON); } }catch(e){}
+  var CB={ on:!!SB, SB:SB,
+    auth:function(){ if(!SB) return Promise.resolve(null); return SB.auth.getUser().then(function(r){ var u=r&&r.data&&r.data.user; if(u) return u; return SB.auth.signInAnonymously().then(function(x){ return (x&&x.data&&x.data.user)||null; }).catch(function(){return null;}); }).catch(function(){return null;}); },
+    listMessages:function(country){ if(!SB) return Promise.resolve(null); var q=SB.from("messages").select("*").order("created_at",{ascending:true}).limit(100); if(country) q=q.eq("country",country); return q.then(function(r){ return r.error?null:r.data; }).catch(function(){return null;}); },
+    addMessage:function(country,name,body){ if(!SB) return Promise.resolve(null); return CB.auth().then(function(u){ if(!u) return null; return SB.from("messages").insert({author:u.id,author_name:name,country:country,body:body}).then(function(r){ return r.error?null:true; }); }).catch(function(){return null;}); },
+    listListings:function(country){ if(!SB) return Promise.resolve(null); var q=SB.from("listings").select("*").eq("status","active").order("created_at",{ascending:false}).limit(100); if(country) q=q.eq("country",country); return q.then(function(r){ return r.error?null:r.data; }).catch(function(){return null;}); },
+    saveBrief:function(payload){ if(!SB) return Promise.resolve(null); return CB.auth().then(function(u){ if(!u) return null; return SB.from("briefs").insert({owner:u.id,payload:payload}).then(function(r){ return r.error?null:true; }); }).catch(function(){return null;}); }
+  }; window.CB=CB;
 var LS={get:function(k,d){try{var v=localStorage.getItem('casario_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set:function(k,v){try{localStorage.setItem('casario_'+k,JSON.stringify(v));}catch(e){}}};
 function pfSave(){try{var av=document.getElementById('avatarBox');LS.set('profile',{name:(document.getElementById('pName')||{}).value||'',country:(document.getElementById('pCountry')||{}).value||'',citySel:(document.getElementById('pCitySel')||{}).value||'',city:(document.getElementById('pCity')||{}).value||'',cityShown:!!(document.getElementById('pCity')&&document.getElementById('pCity').style.display!=='none'),about:(document.getElementById('pAbout')||{}).value||'',avatar:av?(av.style.backgroundImage||''):''});}catch(e){}}
 function pfRestore(){try{var p=LS.get('profile',null);if(!p)return false;var e;if((e=document.getElementById('pName')))e.value=p.name||'';if((e=document.getElementById('pCountry'))&&p.country){e.value=p.country;e.dispatchEvent(new Event('change'));}if((e=document.getElementById('pCitySel'))&&p.citySel){e.value=p.citySel;e.dispatchEvent(new Event('change'));}if((e=document.getElementById('pCity'))){e.value=p.city||'';e.style.display=p.cityShown?'':'none';}if((e=document.getElementById('pAbout'))){e.value=p.about||'';var cc=document.getElementById('ccNow');if(cc)cc.textContent=e.value.length;}var av=document.getElementById('avatarBox');if(av&&p.avatar){av.style.backgroundImage=p.avatar;av.style.backgroundSize='cover';av.style.backgroundPosition='center';if(av.childNodes[0])av.childNodes[0].nodeValue='';}return true;}catch(e){return false;}}
@@ -2088,11 +2098,14 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       '<div class="reacts"><button class="react" data-r="up">👍 <b>0</b></button><button class="react" data-r="down">👎 <b>0</b></button></div>'+
       '<span class="tm">'+m[2]+'</span></div>';
   }
+  function _appendCloudMsg(m){ if(!m||!m.body) return; if(feed.querySelector('[data-cloud="'+m.id+'"]')) return; var wrap=document.createElement('div'); wrap.innerHTML=msgHtml([m.author_name||'Гость',m.body,'',(m.status||'🟢'),'','🙂'],false); var node=wrap.firstChild; node.querySelector('.bub').textContent=m.body; node.setAttribute('data-cloud',m.id); feed.appendChild(node); }
+  function _loadCloudFeed(country){ if(!window.CB||!CB.on) return; CB.listMessages(country).then(function(list){ if(list&&list.length) list.forEach(_appendCloudMsg); }); }
   function renderFeed(){
     var arr=SEED[chatCountrySel.value]||SEED['default'];
     feed.innerHTML=arr.map(function(m){return msgHtml(m,false);}).join('');
     var bubs=feed.querySelectorAll('.bub');
     arr.forEach(function(m,i){ bubs[i].textContent=m[1]; });
+    _loadCloudFeed(chatCountrySel.value);
   }
   chatCountrySel.addEventListener('change',function(){ updCcFlag(); renderFeed(); if(typeof syncCat==='function') syncCat(); });
   renderFeed();
@@ -2111,7 +2124,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     }
     var wrap=document.createElement('div'); wrap.innerHTML=msgHtml(['Вы',v,'сейчас','🟢','Это вы','😊'],true);
     var node=wrap.firstChild; node.querySelector('.bub').textContent=v;
-    feed.appendChild(node); chatInput.value='';
+    feed.appendChild(node); chatInput.value=''; if(window.CB&&CB.on){ try{ CB.addMessage(chatCountrySel.value,'Вы',v); }catch(e){} }
     node.scrollIntoView({block:'nearest'});
   }
   document.getElementById('chatSend').addEventListener('click',sendMsg);
