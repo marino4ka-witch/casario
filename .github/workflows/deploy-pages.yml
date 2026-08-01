@@ -1,0 +1,49 @@
+name: Deploy Casario to GitHub Pages
+
+# Автодеплой сайта на GitHub Pages.
+# Один раз включи: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# После этого сайт будет тут: https://<owner>.github.io/casario/
+
+on:
+  push:
+    branches:
+      - main
+      - claude/correctness-check-0q39av
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Не запускать два деплоя одновременно
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble site (prototype → index.html)
+        run: |
+          mkdir -p _site
+          cp casario-prototype.html _site/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

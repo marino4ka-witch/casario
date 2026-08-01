@@ -1,0 +1,22 @@
+# Конфиг для деплоя на Netlify (альтернатива GitHub Pages).
+# Подключаешь репозиторий в Netlify → он сам собирает и публикует.
+
+[build]
+  # index.html собирается из единого исходника прямо при деплое (без дубля в репо)
+  command = "cp casario-prototype.html index.html"
+  publish = "."
+
+# Кеширование и безопасность
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(self)"
+
+# HTML — всегда свежий (чтобы обновления сразу доезжали)
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
