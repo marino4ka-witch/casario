@@ -1,0 +1,3 @@
+# Minimal Supabase config for the GitHub integration.
+# project_id is a local label; the linked project is set in the Supabase dashboard.
+project_id = "casario"
