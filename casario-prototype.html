@@ -1831,7 +1831,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     dChips.innerHTML=arr.map(function(d,i){
       return '<button type="button" class="chip"'+(i<2?' aria-pressed="true"':'')+'><i class="sdot '+d[1]+'"></i>'+d[0]+'</button>';
     }).join('');
-    dNote.textContent='Цвет — ориентир (данные и локальные источники), зависит от улицы и времени суток. 🟢 спокойно · 🟡 оживлённо · 🔴 повышенное внимание.';
+    dNote.textContent='Цвет — ориентир (данные и локальные источники), зависит от улицы и времени суток. 🟢 спокойно · 🟡 оживлённо · 🔴 повышенное внимание. Оценка по открытым данным — это ориентир, а не гарантия безопасности.';
   }
   function fillCities(){
     var list=CITIES[countrySel.value]||[];
@@ -2656,7 +2656,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     function beligoCTA(){ return '<div class="guide-cta beligo"><b>📱 Учи язык с Beligo</b><p>Изучай язык легко и когда удобно — AI-ассистент и носители из разных стран помогут тебе!</p><a class="cta gc-btn" href="https://www.google.com/search?q=Beligo+app+intercambio+de+idiomas" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">Открыть Beligo →</a></div>'; }
     function legalCTA(name){ return '<div class="guide-cta legal"><b>📄 Нужна помощь в легализации?</b><p>Опишите ситуацию — сколько вас, бюджет, что и где хотите оформить. Свяжем с поддержкой, оператор всё подскажет.</p><button class="cta gc-btn" data-cta="legal" data-country="'+name+'">Написать в поддержку →</button></div>'; }
     function emergCTA(name){ var rows=EMERG[name]||[['🚨 Единый номер','911']];
-      return '<div class="guide-emerg"><b>☎️ Экстренные номера ('+name+'):</b><div class="emerg-rows">'+rows.map(function(r){return '<div class="emerg-row">'+r[0]+' — <span class="num">'+r[1]+'</span></div>';}).join('')+'</div></div>'; }
+      return '<div class="guide-emerg"><b>☎️ Экстренные номера ('+name+'):</b><span class="cw-hint" style="display:block;margin:2px 0 6px">⚠️ Проверяйте актуальность номеров.</span><div class="emerg-rows">'+rows.map(function(r){return '<div class="emerg-row">'+r[0]+' — <span class="num">'+r[1]+'</span></div>';}).join('')+'</div></div>'; }
     function newsBlock(name){
       var q=encodeURIComponent(name+' новости');
       return '<div class="cblock"><h4>📰 Актуальные новости</h4><div class="ctext"><p>Свежие новости страны из открытых источников — всегда актуальные:</p><div class="tg-links">'+
@@ -2922,7 +2922,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   function renderSos(){
     var ctry=sosCountry.value, city=sosCityVal();
     document.getElementById('sosTitle').textContent='🆘 Хэлпер · '+ctry;
-    document.getElementById('sosLoc').textContent=(city?city+', ':'')+ctry+' — экстренные службы и полезные контакты.';
+    document.getElementById('sosLoc').textContent=(city?city+', ':'')+ctry+' — экстренные службы и полезные контакты. ⚠️ Проверяйте актуальность номеров перед звонком.';
     var rows=EMERG[ctry]||[['🚨 Единый номер','911']];
     document.getElementById('sosEmergList').innerHTML=rows.map(function(r){ return '<div class="emerg-row"><span class="en">'+r[0]+'</span><a class="ep" href="tel:'+String(r[1]).replace(/[^0-9+]/g,'')+'"><span class="callico">📞</span>'+r[1]+'</a></div>'; }).join('');
     var grid=document.getElementById('sosGrid'); sosSel=null;
@@ -3024,7 +3024,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     }
     function buyMore(){ remain=60*60; setLocked(false); paintTimer(); toast('Оплачено $10 ⭐ — ещё 1 час разбора'); bub('ai','✅ Оплата принята — новый час разбора. Продолжаем 🤝'); }
     // приветствие: спрашиваем страну + краткое описание ситуации
-    bub('ai','🛡️ <b>Оплата $10 подтверждена.</b> Я — AI-юрист Casario, помогаю по вашей сделке <b>1 час</b> (можно продлить). Отвечаю на <b>русском, английском и испанском</b>.<br>Чтобы разобрать точно, укажите: 🌍 <b>страну</b> (право различается) и кратко — <b>вашу ситуацию</b> и в чём нужна помощь. Можно прислать <b>фото или PDF</b> договора.<br><i>Напр.: «Аргентина, снимаю квартиру — проверьте договор, боюсь скрытых пунктов».</i>',{sys:true,time:'09:28'});
+    bub('ai','🛡️ <b>Оплата $10 подтверждена.</b> Я — AI-юрист Casario, помогаю по вашей сделке <b>1 час</b> (можно продлить). Отвечаю на <b>русском, английском и испанском</b>.<br>Чтобы разобрать точно, укажите: 🌍 <b>страну</b> (право различается) и кратко — <b>вашу ситуацию</b> и в чём нужна помощь. Можно прислать <b>фото или PDF</b> договора.<br><i>Напр.: «Аргентина, снимаю квартиру — проверьте договор, боюсь скрытых пунктов».</i><br><small style="opacity:.72">⚠️ Это AI-консультация — она не заменяет живого юриста. Для точных решений по вашей ситуации обратитесь к специалисту.</small>',{sys:true,time:'09:28'});
     bub('me','Аргентина, Буэнос-Айрес. Снимаю квартиру — есть ли тёмные места в договоре?<div class="lwphoto" style="margin-top:7px">📄</div>',{time:'09:29'});
     bub('ai','📸 Фото нечёткое — часть текста не читается (мелкий шрифт + блик снизу). Пришлите ещё раз при хорошем свете, без бликов, чтобы пункт целиком попал в кадр.',{time:'09:29'});
     bub('me','<div class="lwphoto">📃</div>Так лучше?',{time:'09:30'});
