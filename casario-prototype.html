@@ -1714,6 +1714,34 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
     var ab=document.getElementById("accountBtn"); if(ab) ab.addEventListener("click",function(){ if(_AUTH){ if(window.CB) CB.signOut(); _updAccount(null); toast("Вы вышли из аккаунта"); } else openLogin(); });
     if(window.CB&&CB.on){ CB.onAuth(_updAccount); CB.session().then(function(sx){ _updAccount((sx&&sx.user)||null); }); }
   })();
+
+  // ===== PAY: единый платёжный слой — Telegram Stars ⭐ + Stripe 💳 (мягкий фолбэк) =====
+  var TG=null; try{ TG=(window.Telegram&&window.Telegram.WebApp)||null; if(TG){ TG.ready(); TG.expand(); } }catch(e){}
+  var PAY={
+    env: TG?'telegram':'web',
+    _fn: function(){ return (window.CB&&CB.on&&CB.SB&&CB.SB.functions)?CB.SB.functions:null; },
+    // item: { sku, title, usd }; onOk() применяет покупку
+    checkout: function(item,onOk){
+      var fn=PAY._fn();
+      if(!fn) return PAY._demo(item,onOk); // нет бэкенда (демо/превью) → как раньше
+      if(TG){ // внутри Telegram → Stars через createInvoiceLink на сервере
+        return fn.invoke('create-invoice',{body:{sku:item.sku,title:item.title,usd:item.usd,initData:TG.initData||''}})
+          .then(function(r){ var link=r&&r.data&&r.data.link; if(!link) return PAY._demo(item,onOk);
+            try{ TG.openInvoice(link,function(st){ if(st==='paid'){ onOk&&onOk(); toast('✅ Оплачено ⭐'); }
+              else if(st==='failed'){ toast('Оплата не прошла'); } else if(st==='cancelled'){ toast('Оплата отменена'); } }); }
+            catch(e){ PAY._demo(item,onOk); } })
+          .catch(function(){ PAY._demo(item,onOk); });
+      }
+      // обычный сайт → Stripe Checkout на сервере; после оплаты вернёмся с ?paid=<sku>
+      var base=location.href.split('#')[0].split('?')[0];
+      return fn.invoke('create-checkout',{body:{sku:item.sku,title:item.title,usd:item.usd,success_url:base+'?paid='+encodeURIComponent(item.sku),cancel_url:base}})
+        .then(function(r){ var url=r&&r.data&&r.data.url; if(!url) return PAY._demo(item,onOk); location.href=url; })
+        .catch(function(){ PAY._demo(item,onOk); });
+    },
+    _demo: function(item,onOk){ onOk&&onOk(); toast('Демо: «'+item.title+'» $'+item.usd+' — в опубликованном приложении здесь реальная оплата'); }
+  };
+  window.PAY=PAY;
+
 var LS={get:function(k,d){try{var v=localStorage.getItem('casario_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set:function(k,v){try{localStorage.setItem('casario_'+k,JSON.stringify(v));}catch(e){}}};
 function pfSave(){try{var av=document.getElementById('avatarBox');LS.set('profile',{name:(document.getElementById('pName')||{}).value||'',country:(document.getElementById('pCountry')||{}).value||'',citySel:(document.getElementById('pCitySel')||{}).value||'',city:(document.getElementById('pCity')||{}).value||'',cityShown:!!(document.getElementById('pCity')&&document.getElementById('pCity').style.display!=='none'),about:(document.getElementById('pAbout')||{}).value||'',avatar:av?(av.style.backgroundImage||''):''});}catch(e){}}
 function pfRestore(){try{var p=LS.get('profile',null);if(!p)return false;var e;if((e=document.getElementById('pName')))e.value=p.name||'';if((e=document.getElementById('pCountry'))&&p.country){e.value=p.country;e.dispatchEvent(new Event('change'));}if((e=document.getElementById('pCitySel'))&&p.citySel){e.value=p.citySel;e.dispatchEvent(new Event('change'));}if((e=document.getElementById('pCity'))){e.value=p.city||'';e.style.display=p.cityShown?'':'none';}if((e=document.getElementById('pAbout'))){e.value=p.about||'';var cc=document.getElementById('ccNow');if(cc)cc.textContent=e.value.length;}var av=document.getElementById('avatarBox');if(av&&p.avatar){av.style.backgroundImage=p.avatar;av.style.backgroundSize='cover';av.style.backgroundPosition='center';if(av.childNodes[0])av.childNodes[0].nodeValue='';}return true;}catch(e){return false;}}
@@ -2119,11 +2147,9 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     window.scrollTo({top:0});
   });
   // paywall
+  function _grantSearch(){ paid=true; render(); var pm=document.getElementById('payModal'); if(pm) pm.classList.remove('show'); revealResults(); toast('✅ Ссылки открыты'); }
   document.getElementById('payNow').addEventListener('click',function(){
-    paid=true; render(); // разблокируем ссылки на первоисточник
-    document.getElementById('payModal').classList.remove('show');
-    revealResults();
-    toast('✅ Оплачено в Telegram Stars ⭐ (демо) — ссылки открыты');
+    PAY.checkout({sku:'search',title:'Подбор жилья — 10 вариантов',usd:10}, _grantSearch);
   });
   document.getElementById('payCancel').addEventListener('click',function(){
     document.getElementById('payModal').classList.remove('show');
@@ -2680,11 +2706,19 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   var paySub=document.getElementById('paySub');
   function showPaySub(){ paySub.style.display=''; paySub.scrollIntoView({behavior:'smooth',block:'nearest'}); }
   document.getElementById('proSub').addEventListener('click',function(){ if(paySub.style.display==='none') showPaySub(); else paySub.style.display='none'; });
-  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; proModal.classList.remove('show'); paySub.style.display='none'; isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('Оформлено «Кочевник» $20/мес — оплата: '+b.getAttribute('data-m')+' ✅ · поднятие объявлений бесплатно'); });
+  function _grantPRO(){ proModal.classList.remove('show'); isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('✅ PRO «Кочевник» оформлен · поднятие объявлений бесплатно'); }
+  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; paySub.style.display='none'; PAY.checkout({sku:'pro',title:'PRO «Кочевник» — подписка $20/мес',usd:20}, _grantPRO); });
   document.getElementById('payMethodClose').addEventListener('click',function(){ payMethodModal.classList.remove('show'); });
-  document.getElementById('payCard').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата картой — «Кочевник» $20/мес 💳'); });
-  document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата Telegram Stars — «Кочевник» $20/мес ⭐'); });
+  document.getElementById('payCard').addEventListener('click',function(){ payMethodModal.classList.remove('show'); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — карта $20/мес',usd:20}, _grantPRO); });
+  document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — Stars $20/мес',usd:20}, _grantPRO); });
   payMethodModal.addEventListener('click',function(e){ if(e.target===payMethodModal) payMethodModal.classList.remove('show'); });
+  // Возврат со Stripe Checkout (?paid=<sku>) → применяем покупку и чистим URL
+  (function(){ try{ var sku=(new URLSearchParams(location.search)).get('paid'); if(!sku) return;
+    if(sku==='search'){ paid=true; try{render();}catch(e){} try{revealResults();}catch(e){} toast('✅ Оплата прошла — доступ открыт'); }
+    else if(sku==='pro'){ isPRO=true; LS.set('pro',true); try{if(typeof syncCat==='function')syncCat();}catch(e){} toast('✅ PRO «Кочевник» оформлен'); }
+    else { toast('✅ Оплата прошла'); }
+    try{ history.replaceState(null,'',location.pathname+location.hash); }catch(e){}
+  }catch(e){} })();
 
   // ---- Главная: гид по странам ----
   var COUNTRIES=[
