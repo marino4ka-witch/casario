@@ -820,6 +820,9 @@
 @media (max-width:380px){.cinfo{flex-wrap:wrap}.cinfo-w{flex-basis:100%;border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:10px}}
 
 .adcard.featured{border:1.5px solid var(--gold);box-shadow:0 0 0 1px var(--gold),0 6px 20px rgba(221,134,54,.25)}
+
+.demo-note{margin:0 0 12px;padding:9px 11px;border-radius:12px;border:1px dashed color-mix(in srgb,var(--gold) 55%,var(--line));background:color-mix(in srgb,var(--gold) 9%,var(--surface));color:var(--ink);font-size:12px;line-height:1.4}
+.demo-note b{color:var(--gold)}
 </style>
 
 <div class="app">
@@ -1935,9 +1938,13 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   };
   function hrefDom(u){ return u.replace(/^https?:\/\//,'').split('/')[0].replace(/^www\./,''); }
   var paid=false;
+  function _curBudget(){var mn=parseInt((document.getElementById('pmin')||{}).value,10)||0,mx=parseInt((document.getElementById('pmax')||{}).value,10)||1e9;if(mx<mn){var t=mn;mn=mx;mx=t;}return [mn,mx];}
+  function _shown(){var b=_curBudget();var r=data.filter(function(d){return d.price>=b[0]*0.88&&d.price<=b[1]*1.12;});return r.length?r:data;}
   function render(){
     var box=document.getElementById('cards');
-    box.innerHTML=data.map(function(d,idx){
+    var _list=_shown();var _cn=(document.getElementById('country')||{}).value||'';
+    var _demo='<div class="demo-note">🧪 <b>Демо-подборка</b> — пример данных'+((_cn&&_cn!=='Аргентина')?' (показан пример по Буэнос-Айресу)':'')+'. В рабочей версии придут 10 проверенных вариантов точно по вашему брифу'+(_cn?(' · '+_cn):'')+'. Отфильтровано по бюджету: '+_list.length+' из '+data.length+'.</div>';
+    box.innerHTML=_demo+_list.map(function(d,idx){
       var tags=d.tags.map(function(t){return '<span class="tag'+(t[1]?' hi':'')+'">'+t[0]+'</span>';}).join('');
       var photo='<div class="cr-photo" style="background:linear-gradient(135deg,hsl('+d.hue+' 52% 44%),hsl('+((d.hue+40)%360)+' 58% 30%))"><span class="cr-emo">'+d.emo+'</span><span class="cr-gal">📷 '+d.ph+' фото</span></div>';
       var href=HREF[d.hood]||('https://'+d.url);
