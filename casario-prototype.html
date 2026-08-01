@@ -1270,6 +1270,7 @@
             <button class="cta" id="adPublish">Опубликовать · <span id="adPriceLbl">$2</span></button>
           </div>
         </div>
+        <div class="demo-note" style="border-style:solid">🛡️ <b>Безопасность:</b> не вносите предоплату и залог незнакомцам до осмотра, проверяйте документы. Объявления от пользователей — Casario их не гарантирует.</div>
         <div class="feed" id="adsFeed"></div>
       </div>
     </div>
@@ -2349,6 +2350,9 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var tg=document.getElementById('adTg').value.trim(), wa=document.getElementById('adWa').value.trim(), phone=document.getElementById('adPhone').value.trim();
     var cparts=[]; if(tg) cparts.push('✈️ '+tg); if(wa) cparts.push('🟢 '+wa); if(phone) cparts.push('📞 '+phone);
     if(!cparts.length){ toast('Укажите хотя бы один контакт (Telegram / WhatsApp / телефон)'); return; }
+    var _blob=(text+' '+desc);
+    if(/(https?:\/\/|www\.|t\.me\/|\b[\wа-я-]+\.(com|ru|net|org|io|me|uy|ar|cl|py|co))/i.test(_blob)){ toast('⚠️ Ссылки в заголовке/описании запрещены — используйте поля контактов ниже.'); return; }
+    if(/(предоплат|аванс вперёд|аванс вперед|залог вперёд|перевед[иё]те|отправьте деньги|western union|usdt|binance|бинанс|крипт|100%\s*гаранти|без осмотра)/i.test(_blob)){ toast('🚫 Похоже на мошенничество (предоплата/перевод вперёд). Такие объявления запрещены.'); return; }
     var contact=cparts.join(' · ');
     var loc=[city,dist].filter(Boolean).join(', ')||'город не указан';
     var proFree=isPRO&&freeAdsUsed<2;
