@@ -15,24 +15,31 @@
 Магический вход по email заработает только когда сайт живёт по настоящему адресу.
 Я уже положил в репо автодеплой. Выбери один вариант:
 
-### Вариант A — GitHub Pages (проще всего, ничего нового заводить не надо) ⭐
-1. В репозитории: **Settings → Pages → Build and deployment → Source: `GitHub Actions`**.
-   (workflow `.github/workflows/deploy-pages.yml` уже в репо — он сам соберёт `index.html`.)
-2. Если деплой идёт с этой ветки, а не с `main`: **Settings → Environments → `github-pages`
-   → Deployment branches** → добавь ветку `claude/correctness-check-0q39av`
-   (либо просто смёрж ветку в `main`).
-3. Через ~1–2 минуты сайт будет тут:
-   **https://marino4ka-witch.github.io/casario/**
-4. В Supabase → **Authentication → URL Configuration**:
-   - **Site URL**: `https://marino4ka-witch.github.io/casario/`
-   - **Redirect URLs** → добавь: `https://marino4ka-witch.github.io/casario/`
+> ⚠️ Твой репозиторий **приватный**. Автодеплой через GitHub Actions я настроил и
+> проверил (сборка `index.html` проходит), **но саму публикацию Pages включить
+> кодом нельзя** — GitHub не даёт токену workflow права создавать Pages-сайт, плюс
+> Pages для приватного репо требует платного плана. Поэтому выбор ниже.
 
-### Вариант B — Netlify (свой домен, чуть удобнее для маркетинга)
-1. Netlify → **Add new site → Import from GitHub** → выбери `casario`.
-2. Настройки сборки Netlify возьмёт из `netlify.toml` (уже в репо) — жать ничего не надо.
-3. Получишь адрес вида `https://<имя>.netlify.app` (можно потом свой домен).
+### Вариант A — Netlify (рекомендую для приватного репо) ⭐
+Работает с приватным репозиторием бесплатно, свой домен, ничего публиковать не надо.
+1. Зайди на https://netlify.com (войти через GitHub).
+2. **Add new site → Import an existing project → GitHub → `casario`**.
+3. Настройки сборки Netlify возьмёт из `netlify.toml` (уже в репо) — просто **Deploy**.
+   - ветку можно указать `claude/correctness-check-0q39av` или `main` (после мержа).
+4. Получишь адрес вида `https://<имя>.netlify.app` (позже можно свой домен).
+5. В Supabase → **Authentication → URL Configuration** пропиши этот адрес
+   в **Site URL** и **Redirect URLs**.
+
+### Вариант B — GitHub Pages (бесплатно, если репо сделать публичным)
+1. **Settings → General → Danger Zone → Change visibility → Public**
+   (anon-ключ Supabase безопасен в публичном коде — данные защищает RLS; секретов в репо нет).
+2. **Settings → Pages → Build and deployment → Source: `GitHub Actions`**.
+3. Смёрж ветку в `main` (workflow деплоит с `main`) — через ~1–2 мин сайт будет тут:
+   **https://marino4ka-witch.github.io/casario/**
 4. В Supabase → **Authentication → URL Configuration** пропиши этот адрес
    в **Site URL** и **Redirect URLs**.
+
+*(Вариант B с приватным репо возможен только на платном GitHub Pro/Team.)*
 
 > Важно: без шага «Redirect URLs» письмо со ссылкой придёт, но по клику Supabase
 > не пустит обратно в приложение. Это одна строка в настройках — и вход заработает.
