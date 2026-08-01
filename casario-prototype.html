@@ -217,6 +217,8 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
   .cr-note{font-size:12px;color:var(--muted);margin:0 0 10px}
   .cr-link{display:inline-block;font-size:12.5px;font-weight:700;color:var(--accent);text-decoration:none}
   .cr-link:hover{text-decoration:underline}
+  button.cr-link{border:0;background:none;padding:0;font-family:inherit;cursor:pointer}
+  button.cr-link.locked{cursor:pointer;text-decoration:underline;text-underline-offset:2px}
   .paybar{background:var(--surface);padding:14px 2px 4px;margin-top:8px}
   .warn{font-size:11px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);
     border-radius:11px;padding:10px 12px;margin:4px 0 12px;display:flex;gap:8px}
@@ -1392,8 +1394,8 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
   <div class="modal" id="payModal">
     <div class="ucard">
       <div style="font-size:34px">🔒</div>
-      <div class="un">Подбор готов — 10 вариантов</div>
-      <div class="ub">Мы отобрали 10 квартир под ваши фильтры на разный бюджет. Разблокируйте полный список с <b>прямыми ссылками</b> на первоисточник.</div>
+      <div class="un">Открыть ссылки на 10 вариантов</div>
+      <div class="ub">Сами варианты вы уже видите бесплатно. Оплата открывает <b>прямые ссылки на первоисточники</b> (Zonaprop, Argenprop, MercadoLibre и др.) по всем 10 вариантам — пишите владельцам напрямую, без посредников.</div>
       <div style="font-size:22px;font-weight:800;color:var(--accent);margin:6px 0 2px">$10 <span style="font-size:12px;font-weight:600;color:var(--muted)">· ~10 000 ⭐</span></div>
       <div class="us" style="color:var(--muted)">Разовая оплата в Telegram Stars ⭐</div>
       <div class="urow" style="margin-top:12px">
@@ -2100,7 +2102,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       var href=HREF[d.hood]||('https://'+d.url);
       var link = (paid||isPRO)
         ? '<a class="cr-link" href="'+href+'" target="_blank" rel="noopener">Открыть на '+hrefDom(href)+' →</a>'
-        : '<span class="cr-link locked">🔒 Ссылка на первоисточник — после оплаты</span>';
+        : '<button type="button" class="cr-link locked" data-paylink="1">🔒 Открыть первоисточник · $10 за все ссылки</button>';
       return '<div class="card-r'+(d.top?' top':'')+'">'+
         photo+
         (d.top?'<span class="toptag">⭐ ТОП-РЕКОМЕНДАЦИЯ</span>':'')+
@@ -2109,13 +2111,14 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
         '<div class="cr-meta"><span class="tag">'+d.m+'</span><span class="tag">'+d.br+'</span><span class="tag">'+d.furn+'</span>'+tags+'</div>'+
         '<p class="cr-note">'+d.note+'</p>'+
         link+'</div>';
-    }).join('') + ((paid||isPRO) && !moreLoaded ? '<button type="button" class="cta more10" id="showMore10">➕ Показать ещё 10 · <b>'+(isPRO?'бесплатно (PRO)':'$10')+'</b></button>' : ((paid||isPRO) && moreLoaded ? '<div class="more-done">✅ Показаны все найденные варианты'+(isPRO?' · PRO: 20 в день бесплатно':'')+'</div>' : ''));
+    }).join('') + ((paid||isPRO) && !moreLoaded ? '<button type="button" class="cta more10" id="showMore10">➕ Показать ещё 10 вариантов<b>'+(isPRO?' · бесплатно (PRO)':'')+'</b></button>' : ((paid||isPRO) && moreLoaded ? '<div class="more-done">✅ Показаны все найденные варианты'+(isPRO?' · PRO: 20 в день бесплатно':'')+'</div>' : ''));
   }
   var moreLoaded=false;
   render();
   document.getElementById('cards').addEventListener('click',function(e){
+    if(e.target.closest('[data-paylink]')){ document.getElementById('payModal').classList.add('show'); return; }
     if(e.target.closest('#showMore10')){ moreLoaded=true; for(var i=0;i<MORE2.length;i++) data.push(MORE2[i]); render();
-      if(typeof toast==='function') toast(isPRO?'Открыто ещё 10 · бесплатно (PRO «Кочевник») 🆓':'Списано $10 · открыто ещё 10 вариантов 🔓'); }
+      if(typeof toast==='function') toast(isPRO?'Открыто ещё 10 · бесплатно (PRO «Кочевник») 🆓':'Открыто ещё 10 вариантов 🔓'); }
   });
 
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -2131,7 +2134,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       if(i<=sites.length){ setTimeout(tick, step); }
       else {
         ov.classList.remove('show');
-        document.getElementById('payModal').classList.add('show'); // сначала оплата, потом результаты
+        revealResults(); // варианты показываем сразу и бесплатно; $10 — только чтобы открыть ссылки-первоисточники
       }
     })();
   }
