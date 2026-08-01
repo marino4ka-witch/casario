@@ -2200,6 +2200,8 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   }
   // --- «мои объявления»: реестр, закрытие (продано/не актуально), актуализация ---
   var myAds=[], adSeq=0, myAdsList=document.getElementById('myAdsList');
+  function saveAds(){try{LS.set('ads',myAds.filter(function(r){return r.userMade;}).map(function(r){return {cat:r.cat,title:r.title,loc:r.loc,price:r.price,desc:r.desc,contact:r.contact,nP:r.nP,country:r.country,status:r.status,editable:r.editable};}));}catch(e){}}
+  function restoreAds(){try{var arr=LS.get('ads',[]);if(!arr||!arr.length)return;arr.forEach(function(a){var rec=registerMyAd(a.cat,a.title,a.loc,a.price,a.nP,a.contact,a.desc,a.country,a.editable);rec.userMade=true;if(a.status&&a.status!=='active'){rec.status=a.status;applyAdStatus(rec);}});renderMyAds();if(typeof syncCat==='function')syncCat();}catch(e){}}
   function applyAdStatus(rec){
     rec.nodes.forEach(function(n){
       var card=n.querySelector('.adcard'); if(!card) return;
@@ -2219,7 +2221,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   function registerMyAd(cat,title,loc,price,nP,contact,desc,country,editable){
     var adCard=addAd(cat,title,loc,price,nP,contact,desc,country);
     var feedCard=adCard.cloneNode(true); feed.appendChild(feedCard);
-    var rec={id:++adSeq,cat:cat,title:title,loc:loc,price:price,desc:desc||'',status:'active',editable:(editable!==false),editing:false,nodes:[adCard,feedCard]};
+    var rec={id:++adSeq,cat:cat,title:title,loc:loc,price:price,desc:desc||'',contact:contact||'',nP:nP||0,country:country||'',status:'active',editable:(editable!==false),editing:false,userMade:false,nodes:[adCard,feedCard]};
     myAds.push(rec); renderMyAds(); return rec;
   }
   function updateAdNodes(rec){
@@ -2252,7 +2254,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
             rec.title=(el.querySelector('[data-f=title]').value.trim().slice(0,50))||rec.title;
             rec.desc=el.querySelector('[data-f=desc]').value.trim().slice(0,200);
             rec.price=el.querySelector('[data-f=price]').value.trim()||rec.price;
-            updateAdNodes(rec); rec.editing=false; renderMyAds(); toast('Изменения сохранены ✅');
+            updateAdNodes(rec); rec.editing=false; renderMyAds(); saveAds(); toast('Изменения сохранены ✅');
           }
         }); });
         myAdsList.appendChild(el); return;
@@ -2274,8 +2276,8 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
           var a=btn.getAttribute('data-a');
           if(a==='bump'){ bumpAd(rec); }
           else if(a==='edit'){ if(!rec.editable){ toast('Прошло 3 ч — редактирование закрыто'); return; } rec.editing=true; renderMyAds(); }
-          else if(a==='sold'){ rec.status='sold'; applyAdStatus(rec); renderMyAds(); toast('«Продано» — больше не побеспокоят'); }
-          else if(a==='gone'){ rec.status='gone'; applyAdStatus(rec); renderMyAds(); toast('«Не актуально» — объявление закрыто'); }
+          else if(a==='sold'){ rec.status='sold'; applyAdStatus(rec); renderMyAds(); saveAds(); toast('«Продано» — больше не побеспокоят'); }
+          else if(a==='gone'){ rec.status='gone'; applyAdStatus(rec); renderMyAds(); saveAds(); toast('«Не актуально» — объявление закрыто'); }
           else if(a==='renew'){ showScreen('chatScreen'); document.querySelector('#besMode button[data-sub="adsSub"]').click(); adForm.classList.add('open');
             toast('Закрытое заново не открыть — новая подача и оплата ⭐'); }
         });
@@ -2306,6 +2308,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   addAd('svc','Помощь с ВНЖ и документами','Монтевидео','по запросу',0,'✈️ @legal_uy','','Уругвай');
   addClosedAd('svc','Грузоперевозки по городу','Монтевидео','от $30','Уругвай','gone');
   syncCat();
+   restoreAds();
   // счётчики символов
   var adTextEl=document.getElementById('adText'), adTitleCC=document.getElementById('adTitleCC');
   var adDescEl=document.getElementById('adDesc'), adDescCC=document.getElementById('adDescCC');
@@ -2325,7 +2328,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var contact=cparts.join(' · ');
     var loc=[city,dist].filter(Boolean).join(', ')||'город не указан';
     var proFree=isPRO&&freeAdsUsed<2;
-    registerMyAd(cat,text,loc,price,nP,contact,desc,chatCountrySel.value);
+    var _r=registerMyAd(cat,text,loc,price,nP,contact,desc,chatCountrySel.value); _r.userMade=true; saveAds();
     adForm.classList.remove('open');
     if(proFree){ freeAdsUsed++; syncCat(); toast('Опубликовано бесплатно · PRO «Кочевник» ('+freeAdsUsed+'/2 сегодня) 🆓 — управлять в профиле'); }
     else { syncCat(); toast('Опубликовано · оплата '+(isSvc?'$5':'$2')+' в Telegram Stars ⭐ (демо) — управлять в профиле. PRO «Кочевник»: 2 в день бесплатно'); }
