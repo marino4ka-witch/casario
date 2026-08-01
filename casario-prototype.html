@@ -1397,7 +1397,7 @@
         <div class="pro-hero-l">
           <span class="pro-badge">PRO</span>
           <div class="pro-hero-t">Кочевник (PRO)</div>
-          <div class="pro-hero-p">$30<small>/мес</small></div>
+          <div class="pro-hero-p">$20<small>/мес</small></div>
           <ul class="pro-hero-ul">
             <li>Чаты и группы по странам</li>
             <li>GPS-гид «Что рядом» без лимита</li>
@@ -1439,7 +1439,7 @@
           <div class="tf-det">Ваш баннер видят релоканты по всей Латам — под подборкой и в Беседке, с ротацией. <b>$200 / 3 суток</b>, для PRO — 7 суток. До 5 реклам в сутки по кругу.</div></li>
       </ul>
 
-      <button class="cta" id="proSub" style="margin-top:14px">⭐ Оформить PRO · $30/мес</button>
+      <button class="cta" id="proSub" style="margin-top:14px">⭐ Оформить PRO · $20/мес</button>
       <div class="paysub" id="paySub" style="display:none">
         <div class="paysub-h">Выберите способ оплаты:</div>
         <button class="cta ghost paysub-b" data-m="Telegram Stars">⭐ Telegram Stars</button>
@@ -1596,7 +1596,7 @@
     <div class="ucard">
       <div style="font-size:30px">🧭</div>
       <div class="un">Оплата «Кочевник»</div>
-      <div class="ub"><b style="color:var(--accent)">$30 / месяц.</b> Выберите способ оплаты:</div>
+      <div class="ub"><b style="color:var(--accent)">$20 / месяц.</b> Выберите способ оплаты:</div>
       <div class="paymethods">
         <button class="cta" id="payCard">💳 Банковская карта</button>
         <button class="cta" id="payStars">⭐ Telegram Stars</button>
@@ -2529,10 +2529,10 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   var paySub=document.getElementById('paySub');
   function showPaySub(){ paySub.style.display=''; paySub.scrollIntoView({behavior:'smooth',block:'nearest'}); }
   document.getElementById('proSub').addEventListener('click',function(){ if(paySub.style.display==='none') showPaySub(); else paySub.style.display='none'; });
-  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; proModal.classList.remove('show'); paySub.style.display='none'; isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('Оформлено «Кочевник» $30/мес — оплата: '+b.getAttribute('data-m')+' ✅ · поднятие объявлений бесплатно'); });
+  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; proModal.classList.remove('show'); paySub.style.display='none'; isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('Оформлено «Кочевник» $20/мес — оплата: '+b.getAttribute('data-m')+' ✅ · поднятие объявлений бесплатно'); });
   document.getElementById('payMethodClose').addEventListener('click',function(){ payMethodModal.classList.remove('show'); });
-  document.getElementById('payCard').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата картой — «Кочевник» $30/мес 💳'); });
-  document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата Telegram Stars — «Кочевник» $30/мес ⭐'); });
+  document.getElementById('payCard').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата картой — «Кочевник» $20/мес 💳'); });
+  document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); toast('Демо: оплата Telegram Stars — «Кочевник» $20/мес ⭐'); });
   payMethodModal.addEventListener('click',function(e){ if(e.target===payMethodModal) payMethodModal.classList.remove('show'); });
 
   // ---- Главная: гид по странам ----
