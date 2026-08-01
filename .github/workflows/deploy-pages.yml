@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - claude/correctness-check-0q39av
   workflow_dispatch:
 
 permissions:
