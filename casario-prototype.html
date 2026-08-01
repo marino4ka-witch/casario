@@ -1655,6 +1655,7 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
   CB.session=function(){ if(!SB) return Promise.resolve(null); return SB.auth.getSession().then(function(r){ return (r&&r.data&&r.data.session)||null; }).catch(function(){return null;}); };
   CB.signIn=function(email){ if(!SB) return Promise.resolve({error:"offline"}); return SB.auth.signInWithOtp({email:email,options:{emailRedirectTo:location.href.split("#")[0]}}).then(function(r){ return {error:r.error?r.error.message:null}; }).catch(function(e){ return {error:String(e)}; }); };
   CB.signOut=function(){ if(!SB) return Promise.resolve(); return SB.auth.signOut().catch(function(){}); };
+  CB.addListing=function(rec){ if(!SB) return Promise.resolve(null); return CB.auth().then(function(u){ if(!u) return null; return SB.from("listings").insert({owner:u.id,cat:rec.cat,title:rec.title,loc:rec.loc,price:rec.price,descr:rec.desc||"",contact:rec.contact||"",country:rec.country||"",photos:rec.nP||0}).then(function(r){ return r.error?null:true; }); }).catch(function(){return null;}); };
   CB.onAuth=function(cb){ if(!SB) return; try{ SB.auth.onAuthStateChange(function(_e,sess){ cb((sess&&sess.user)||null); }); }catch(e){} };
   var _AUTH=null;
   function _updAccount(u){ _AUTH=u; var ab=document.getElementById("accountBtn"); if(ab){ ab.textContent=u?("👤 "+(u.email||"аккаунт")+" · выйти"):"🔐 Войти / создать аккаунт"; } }
@@ -2011,6 +2012,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
   var sites=["Zonaprop ✓","Argenprop ✓","MercadoLibre ✓","Mudafy ✓","InfoCasas ✓","отбираю лучшее…"];
   function runSearch(){
+    if(window.CB&&CB.on){ try{ CB.saveBrief({country:(document.getElementById("country")||{}).value||"",city:(document.getElementById("city")||{}).value||"",budget:[parseInt((document.getElementById("pmin")||{}).value,10)||0,parseInt((document.getElementById("pmax")||{}).value,10)||0]}); }catch(e){} }
     var ov=document.getElementById('overlay'), scan=document.getElementById('scan');
     ov.classList.add('show'); var i=0;
     var step=reduce?260:520;
@@ -2377,6 +2379,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   addClosedAd('svc','Грузоперевозки по городу','Монтевидео','от $30','Уругвай','gone');
   syncCat();
    restoreAds();
+   if(window.CB&&CB.on){ CB.listListings().then(function(list){ if(list&&list.length){ list.forEach(function(r){ try{ addAd(r.cat||"buy",r.title||"",r.loc||"",r.price||"",r.photos||0,r.contact||"",r.descr||"",r.country||""); }catch(e){} }); if(typeof syncCat==="function") syncCat(); } }); }
   // счётчики символов
   var adTextEl=document.getElementById('adText'), adTitleCC=document.getElementById('adTitleCC');
   var adDescEl=document.getElementById('adDesc'), adDescCC=document.getElementById('adDescCC');
@@ -2400,7 +2403,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var contact=cparts.join(' · ');
     var loc=[city,dist].filter(Boolean).join(', ')||'город не указан';
     var proFree=isPRO&&freeAdsUsed<2;
-    var _r=registerMyAd(cat,text,loc,price,nP,contact,desc,chatCountrySel.value); _r.userMade=true; saveAds();
+    var _r=registerMyAd(cat,text,loc,price,nP,contact,desc,chatCountrySel.value); _r.userMade=true; saveAds(); if(window.CB&&CB.on){ try{ CB.addListing({cat:cat,title:text,loc:loc,price:price,desc:desc,contact:contact,country:chatCountrySel.value,nP:nP}); }catch(e){} }
     adForm.classList.remove('open');
     syncCat(); toast('Опубликовано бесплатно ✅ — управлять в «Профиль → Мои объявления». Поднять или выделить — там же.');
     
