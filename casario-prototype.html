@@ -1150,6 +1150,7 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
 
   <!-- ===== PROFILE SCREEN ===== -->
   <div class="screen" id="profileScreen">
+    <div style="padding:12px 14px 0"><button class="cta ghost" id="accountBtn" style="width:100%">🔐 Войти / создать аккаунт</button></div>
     <div class="pv">
       <div class="avatar" id="avatarBox" title="Добавить фото (1:1)">🙂<div class="cam">📷</div><div class="online-dot"></div></div>
       <input type="file" accept="image/*" id="avatarInput" style="display:none">
@@ -1624,7 +1625,20 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
   </nav>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="modal" id="loginModal">
+    <div class="ucard">
+      <div style="font-size:30px">🔐</div>
+      <div class="un">Вход в Casario</div>
+      <div class="ub">Введите email — пришлём ссылку для входа (без пароля). Аккаунт нужен, чтобы публиковать объявления и писать в беседке.</div>
+      <div class="field"><input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email"></div>
+      <div class="paymethods">
+        <button class="cta" id="loginSend">📧 Получить ссылку для входа</button>
+        <button class="cta ghost" id="loginGuest">Пока только смотреть</button>
+      </div>
+      <div class="ub" style="opacity:.7;font-size:11px;margin-top:6px">Продолжая, вы соглашаетесь с Условиями и Политикой конфиденциальности Casario.</div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
 
 <script>
 (function(){
@@ -1638,6 +1652,19 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
     listListings:function(country){ if(!SB) return Promise.resolve(null); var q=SB.from("listings").select("*").eq("status","active").order("created_at",{ascending:false}).limit(100); if(country) q=q.eq("country",country); return q.then(function(r){ return r.error?null:r.data; }).catch(function(){return null;}); },
     saveBrief:function(payload){ if(!SB) return Promise.resolve(null); return CB.auth().then(function(u){ if(!u) return null; return SB.from("briefs").insert({owner:u.id,payload:payload}).then(function(r){ return r.error?null:true; }); }).catch(function(){return null;}); }
   }; window.CB=CB;
+  CB.session=function(){ if(!SB) return Promise.resolve(null); return SB.auth.getSession().then(function(r){ return (r&&r.data&&r.data.session)||null; }).catch(function(){return null;}); };
+  CB.signIn=function(email){ if(!SB) return Promise.resolve({error:"offline"}); return SB.auth.signInWithOtp({email:email,options:{emailRedirectTo:location.href.split("#")[0]}}).then(function(r){ return {error:r.error?r.error.message:null}; }).catch(function(e){ return {error:String(e)}; }); };
+  CB.signOut=function(){ if(!SB) return Promise.resolve(); return SB.auth.signOut().catch(function(){}); };
+  CB.onAuth=function(cb){ if(!SB) return; try{ SB.auth.onAuthStateChange(function(_e,sess){ cb((sess&&sess.user)||null); }); }catch(e){} };
+  var _AUTH=null;
+  function _updAccount(u){ _AUTH=u; var ab=document.getElementById("accountBtn"); if(ab){ ab.textContent=u?("👤 "+(u.email||"аккаунт")+" · выйти"):"🔐 Войти / создать аккаунт"; } }
+  function openLogin(){ var m=document.getElementById("loginModal"); if(m) m.classList.add("show"); }
+  (function(){ var lm=document.getElementById("loginModal"); if(lm) lm.addEventListener("click",function(e){ if(e.target===lm) lm.classList.remove("show"); });
+    var ls=document.getElementById("loginSend"); if(ls) ls.addEventListener("click",function(){ var em=((document.getElementById("loginEmail")||{}).value||"").trim(); if(!/.+@.+\..+/.test(em)){ toast("Введите корректный email"); return; } if(!(window.CB&&CB.on)){ toast("Вход доступен в опубликованном приложении (не в этом демо-окне)"); return; } toast("Отправляю ссылку…"); CB.signIn(em).then(function(r){ if(r&&r.error) toast("Ошибка: "+r.error); else { toast("📧 Ссылка отправлена на "+em+" — откройте её, чтобы войти"); lm.classList.remove("show"); } }); });
+    var lg=document.getElementById("loginGuest"); if(lg) lg.addEventListener("click",function(){ document.getElementById("loginModal").classList.remove("show"); });
+    var ab=document.getElementById("accountBtn"); if(ab) ab.addEventListener("click",function(){ if(_AUTH){ if(window.CB) CB.signOut(); _updAccount(null); toast("Вы вышли из аккаунта"); } else openLogin(); });
+    if(window.CB&&CB.on){ CB.onAuth(_updAccount); CB.session().then(function(sx){ _updAccount((sx&&sx.user)||null); }); }
+  })();
 var LS={get:function(k,d){try{var v=localStorage.getItem('casario_'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set:function(k,v){try{localStorage.setItem('casario_'+k,JSON.stringify(v));}catch(e){}}};
 function pfSave(){try{var av=document.getElementById('avatarBox');LS.set('profile',{name:(document.getElementById('pName')||{}).value||'',country:(document.getElementById('pCountry')||{}).value||'',citySel:(document.getElementById('pCitySel')||{}).value||'',city:(document.getElementById('pCity')||{}).value||'',cityShown:!!(document.getElementById('pCity')&&document.getElementById('pCity').style.display!=='none'),about:(document.getElementById('pAbout')||{}).value||'',avatar:av?(av.style.backgroundImage||''):''});}catch(e){}}
 function pfRestore(){try{var p=LS.get('profile',null);if(!p)return false;var e;if((e=document.getElementById('pName')))e.value=p.name||'';if((e=document.getElementById('pCountry'))&&p.country){e.value=p.country;e.dispatchEvent(new Event('change'));}if((e=document.getElementById('pCitySel'))&&p.citySel){e.value=p.citySel;e.dispatchEvent(new Event('change'));}if((e=document.getElementById('pCity'))){e.value=p.city||'';e.style.display=p.cityShown?'':'none';}if((e=document.getElementById('pAbout'))){e.value=p.about||'';var cc=document.getElementById('ccNow');if(cc)cc.textContent=e.value.length;}var av=document.getElementById('avatarBox');if(av&&p.avatar){av.style.backgroundImage=p.avatar;av.style.backgroundSize='cover';av.style.backgroundPosition='center';if(av.childNodes[0])av.childNodes[0].nodeValue='';}return true;}catch(e){return false;}}
@@ -2115,6 +2142,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   function applyBan(){var st=banState();if(chatInput){chatInput.disabled=st.b;if(st.b)chatInput.placeholder=st.msg;}var cs=document.getElementById('chatSend');if(cs)cs.disabled=st.b;}
   function isSpam(v){ return /(https?:\/\/|www\.|t\.me\/|\b[\wа-я-]+\.(com|ru|net|org|uy|ar|cl|py|co|io|me))/i.test(v) || /(продам|продаю|прода[её]тся|куплю|услуг|сдам в аренд|массаж|доставка)/i.test(v); }
   function sendMsg(){
+    if(window.CB&&CB.on&&!_AUTH){ openLogin(); toast('Войдите, чтобы писать в беседке'); return; }
     var _bs=banState(); if(_bs.b){ toast(_bs.msg); return; } var v=chatInput.value.trim(); if(!v) return; v=v.slice(0,200);
     if(isSpam(v)){
       warns++; LS.set('warns',warns);
@@ -2355,6 +2383,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   adTextEl.addEventListener('input',function(){ adTitleCC.textContent=adTextEl.value.length; });
   adDescEl.addEventListener('input',function(){ adDescCC.textContent=adDescEl.value.length; });
   document.getElementById('adPublish').addEventListener('click',function(){
+    if(window.CB&&CB.on&&!_AUTH){ openLogin(); toast('Войдите, чтобы опубликовать объявление'); return; }
     var cat=curCat(), isSvc=cat==='svc';
     var city=document.getElementById('adCity').value.trim(), dist=document.getElementById('adDist').value.trim();
     var text=adTextEl.value.trim().slice(0,50)||'Объявление';
