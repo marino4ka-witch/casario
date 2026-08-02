@@ -848,8 +848,8 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
 .demo-note b{color:var(--gold)}
 
 /* ===== ONBOARDING / ВХОД (полноэкранный, по макету) ===== */
-.onb{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;
-  background:#081019;color:#eaf2fb;overflow-y:auto;transition:opacity .5s ease}
+.onb{position:fixed;top:0;bottom:0;left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:var(--maxw);z-index:60;display:flex;flex-direction:column;
+  background:#081019;color:#eaf2fb;overflow-y:auto;transition:opacity .5s ease;border-radius:26px}
 .onb.hide{opacity:0;pointer-events:none}
 .onb-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:space-between;
   padding:calc(12px + env(safe-area-inset-top)) 18px 12px}
