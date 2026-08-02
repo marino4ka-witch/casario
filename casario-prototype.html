@@ -10,7 +10,7 @@
 </head>
 <body>
 <script>/* Casario backend config — anon key is public-safe (RLS protects data). NEVER put the service_role key here. */
-window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPABASE_ANON:"sb_publishable_8Hh9uzl9_Agd6rTR7AKiBQ_jxN_rhC6"};</script>
+window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPABASE_ANON:"sb_publishable_8Hh9uzl9_Agd6rTR7AKiBQ_jxN_rhC6",TG_BOT:"",USDT_TRC20:""};</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -1545,8 +1545,7 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
       <div class="paysub" id="paySub" style="display:none">
         <div class="paysub-h">Выберите способ оплаты:</div>
         <button class="cta ghost paysub-b" data-m="Telegram Stars">⭐ Telegram Stars</button>
-        <button class="cta ghost paysub-b" data-m="карта">💳 Банковская карта</button>
-        <button class="cta ghost paysub-b" data-m="Биткоин">₿ Биткоин</button>
+        <button class="cta ghost paysub-b" data-m="Биткоин">₿ Крипта (USDT/BTC)</button>
       </div>
       <div class="protar-foot">🔒 Безопасные платежи · Отмена в любой момент</div>
     </div>
@@ -1662,8 +1661,8 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
       </div>
       <div class="field"><input type="number" id="walAmt" placeholder="Своя сумма, $" min="1"></div>
       <div class="paymethods">
-        <button class="cta" id="walCard">💳 Пополнить картой</button>
         <button class="cta" id="walStars">⭐ Пополнить Telegram Stars</button>
+        <button class="cta ghost" id="walCard">₿ Пополнить криптой (USDT)</button>
         <button class="cta ghost" id="walClose">Отмена</button>
       </div>
     </div>
@@ -1700,8 +1699,8 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
       <div class="un">Оплата «Кочевник»</div>
       <div class="ub"><b style="color:var(--accent)">$20 / месяц.</b> Выберите способ оплаты:</div>
       <div class="paymethods">
-        <button class="cta" id="payCard">💳 Банковская карта</button>
         <button class="cta" id="payStars">⭐ Telegram Stars</button>
+        <button class="cta ghost" id="payCrypto">₿ Криптовалюта (USDT)</button>
         <button class="cta ghost" id="payMethodClose">Отмена</button>
       </div>
     </div>
@@ -1762,16 +1761,17 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
     if(window.CB&&CB.on){ CB.onAuth(_updAccount); CB.session().then(function(sx){ _updAccount((sx&&sx.user)||null); }); }
   })();
 
-  // ===== PAY: единый платёжный слой — Telegram Stars ⭐ + Stripe 💳 (мягкий фолбэк) =====
+  // ===== PAY: Telegram Stars ⭐ (основной способ) + крипта ₿. Без Stripe/PayPal — росс. паспорт. =====
   var TG=null; try{ TG=(window.Telegram&&window.Telegram.WebApp)||null; if(TG){ TG.ready(); TG.expand(); } }catch(e){}
   var PAY={
     env: TG?'telegram':'web',
     _fn: function(){ return (window.CB&&CB.on&&CB.SB&&CB.SB.functions)?CB.SB.functions:null; },
-    // item: { sku, title, usd }; onOk() применяет покупку
+    // item: { sku, title, usd, method? }; onOk() применяет покупку
     checkout: function(item,onOk){
+      if(item&&item.method==='crypto') return PAY._crypto(item,onOk);
       var fn=PAY._fn();
-      if(!fn) return PAY._demo(item,onOk); // нет бэкенда (демо/превью) → как раньше
       if(TG){ // внутри Telegram → Stars через createInvoiceLink на сервере
+        if(!fn) return PAY._demo(item,onOk);
         return fn.invoke('create-invoice',{body:{sku:item.sku,title:item.title,usd:item.usd,initData:TG.initData||''}})
           .then(function(r){ var link=r&&r.data&&r.data.link; if(!link) return PAY._demo(item,onOk);
             try{ TG.openInvoice(link,function(st){ if(st==='paid'){ onOk&&onOk(); toast('✅ Оплачено ⭐'); }
@@ -1779,13 +1779,18 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
             catch(e){ PAY._demo(item,onOk); } })
           .catch(function(){ PAY._demo(item,onOk); });
       }
-      // обычный сайт → Stripe Checkout на сервере; после оплаты вернёмся с ?paid=<sku>
-      var base=location.href.split('#')[0].split('?')[0];
-      return fn.invoke('create-checkout',{body:{sku:item.sku,title:item.title,usd:item.usd,success_url:base+'?paid='+encodeURIComponent(item.sku),cancel_url:base}})
-        .then(function(r){ var url=r&&r.data&&r.data.url; if(!url) return PAY._demo(item,onOk); location.href=url; })
-        .catch(function(){ PAY._demo(item,onOk); });
+      // веб-браузер: Stars оплачиваются внутри Telegram → ведём в бота Casario
+      var bot=(window.CASARIO_CFG&&CASARIO_CFG.TG_BOT)||'';
+      if(bot){ var url='https://t.me/'+bot+'?start=pay_'+encodeURIComponent(item.sku);
+        toast('Открываю оплату в Telegram ⭐'); try{ window.open(url,'_blank','noopener'); }catch(e){ location.href=url; }
+        return Promise.resolve(); }
+      return PAY._demo(item,onOk);
     },
-    _demo: function(item,onOk){ onOk&&onOk(); toast('Демо: «'+item.title+'» $'+item.usd+' — в опубликованном приложении здесь реальная оплата'); }
+    _crypto: function(item,onOk){ var w=(window.CASARIO_CFG&&CASARIO_CFG.USDT_TRC20)||'';
+      if(w){ toast('₿ USDT (TRC20): '+w+' · сумма $'+item.usd+'. После перевода доступ откроется вручную.'); }
+      else { toast('₿ Крипто-оплата скоро — напишите в поддержку'); }
+    },
+    _demo: function(item,onOk){ onOk&&onOk(); toast('Демо: «'+item.title+'» $'+item.usd+' — в Telegram-версии здесь оплата ⭐'); }
   };
   window.PAY=PAY;
 
@@ -2435,7 +2440,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   document.querySelectorAll('.wal-q').forEach(function(b){ b.addEventListener('click',function(){ document.querySelectorAll('.wal-q').forEach(function(x){x.classList.remove('on');}); b.classList.add('on'); walSel=+b.getAttribute('data-amt'); document.getElementById('walAmt').value=''; }); });
   document.getElementById('walAmt').addEventListener('input',function(){ document.querySelectorAll('.wal-q').forEach(function(x){x.classList.remove('on');}); walSel=0; });
   function topUp(method){ var amt=walSel||(+document.getElementById('walAmt').value||0); if(amt<=0){ toast('Укажите сумму'); return; } balance+=amt; fmtBal(); LS.set('bal',balance); walletModal.classList.remove('show'); toast('Пополнено на $'+amt+' ('+method+') — средства не сгорают ✅'); }
-  document.getElementById('walCard').addEventListener('click',function(){ topUp('карта'); });
+  document.getElementById('walCard').addEventListener('click',function(){ topUp('крипта USDT'); });
   document.getElementById('walStars').addEventListener('click',function(){ topUp('Telegram Stars'); });
   document.getElementById('walClose').addEventListener('click',function(){ walletModal.classList.remove('show'); });
   walletModal.addEventListener('click',function(e){ if(e.target===walletModal) walletModal.classList.remove('show'); });
@@ -2823,12 +2828,12 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   function showPaySub(){ paySub.style.display=''; paySub.scrollIntoView({behavior:'smooth',block:'nearest'}); }
   document.getElementById('proSub').addEventListener('click',function(){ if(paySub.style.display==='none') showPaySub(); else paySub.style.display='none'; });
   function _grantPRO(){ proModal.classList.remove('show'); isPRO=true; LS.set('pro',true); if(typeof syncCat==='function') syncCat(); toast('✅ PRO «Кочевник» оформлен · поднятие объявлений бесплатно'); }
-  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; paySub.style.display='none'; PAY.checkout({sku:'pro',title:'PRO «Кочевник» — подписка $20/мес',usd:20}, _grantPRO); });
+  paySub.addEventListener('click',function(e){ var b=e.target.closest('.paysub-b'); if(!b) return; paySub.style.display='none'; var m=b.getAttribute('data-m')||''; var isC=/иткоин|рипт|USDT|BTC/i.test(m); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — подписка $20/мес',usd:20,method:isC?'crypto':'stars'}, _grantPRO); });
   document.getElementById('payMethodClose').addEventListener('click',function(){ payMethodModal.classList.remove('show'); });
-  document.getElementById('payCard').addEventListener('click',function(){ payMethodModal.classList.remove('show'); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — карта $20/мес',usd:20}, _grantPRO); });
+  document.getElementById('payCrypto').addEventListener('click',function(){ payMethodModal.classList.remove('show'); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — крипта $20/мес',usd:20,method:'crypto'}, _grantPRO); });
   document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — Stars $20/мес',usd:20}, _grantPRO); });
   payMethodModal.addEventListener('click',function(e){ if(e.target===payMethodModal) payMethodModal.classList.remove('show'); });
-  // Возврат со Stripe Checkout (?paid=<sku>) → применяем покупку и чистим URL
+  // Возврат после оплаты в Telegram (?paid=<sku>) → применяем покупку и чистим URL
   (function(){ try{ var sku=(new URLSearchParams(location.search)).get('paid'); if(!sku) return;
     if(sku==='search'){ paid=true; try{render();}catch(e){} try{revealResults();}catch(e){} toast('✅ Оплата прошла — доступ открыт'); }
     else if(sku==='pro'){ isPRO=true; LS.set('pro',true); try{if(typeof syncCat==='function')syncCat();}catch(e){} toast('✅ PRO «Кочевник» оформлен'); }
