@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0716">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Beligo — учи язык и общайся с носителями</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{--maxw:440px;--bg:#0b0716;--surface:#160f2a;--surface-2:#1f1638;--ink:#f0ecff;--muted:#a99fce;
+    --line:#2c2350;--accent:#9b6bff;--accent-2:#c39bff;--accent-ink:#120a26;--good:#54c281;--star:#f5c451}
+  html,body{background:#05030b;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.45}
+  .app{max-width:var(--maxw);margin:0 auto;min-height:100vh;background:
+      radial-gradient(120% 60% at 50% 0%, #241748 0%, #0b0716 60%);position:relative;overflow-x:hidden}
+  .wrap{padding:0 18px 40px}
+  /* top bar */
+  .top{display:flex;align-items:center;gap:10px;padding:14px 18px;position:sticky;top:0;z-index:5;
+    background:linear-gradient(180deg,rgba(20,12,40,.92),rgba(11,7,22,.72));backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;
+    padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+  .back:hover{color:var(--ink);border-color:var(--accent)}
+  .blogo{margin-left:auto;display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.4px;font-size:19px}
+  .blogo .mark{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:17px;
+    background:linear-gradient(140deg,var(--accent),#5b34c9);box-shadow:0 6px 18px rgba(123,72,255,.45)}
+  .blogo b span{color:var(--accent-2)}
+  /* hero */
+  .hero{padding:28px 4px 8px;text-align:center}
+  .hero .badge{display:inline-block;font-size:12px;font-weight:700;color:var(--accent-2);background:rgba(155,107,255,.14);
+    border:1px solid rgba(155,107,255,.35);padding:5px 12px;border-radius:999px;margin-bottom:14px}
+  .hero h1{font-size:27px;line-height:1.18;letter-spacing:-.5px;margin-bottom:10px}
+  .hero h1 span{color:var(--accent-2)}
+  .hero p{color:var(--muted);font-size:14.5px;max-width:340px;margin:0 auto}
+  .globe{font-size:60px;margin:6px 0 2px;filter:drop-shadow(0 10px 26px rgba(155,107,255,.45))}
+  /* download buttons */
+  .dl{display:flex;gap:10px;margin:20px 0 6px}
+  .dl a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;color:#fff;
+    background:#0e0a1c;border:1px solid var(--line);border-radius:14px;padding:11px 8px;font-weight:700;font-size:13px}
+  .dl a:hover{border-color:var(--accent)}
+  .dl a .em{font-size:19px}
+  .dl a small{display:block;font-size:9.5px;color:var(--muted);font-weight:600}
+  .dl a .st{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+  /* section */
+  .sec{margin-top:24px}
+  .sec-h{font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin:0 2px 10px}
+  .feats{display:flex;flex-direction:column;gap:10px}
+  .feat{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:13px 14px}
+  .feat .fi{width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;font-size:20px;
+    background:linear-gradient(140deg,rgba(155,107,255,.28),rgba(91,52,201,.18));border:1px solid rgba(155,107,255,.3)}
+  .feat b{font-size:15px;display:block;margin-bottom:2px}
+  .feat p{font-size:12.5px;color:var(--muted);margin:0}
+  /* native speakers row */
+  .people{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+  .ava{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:19px;border:2px solid var(--surface);
+    background:linear-gradient(140deg,#2a1d54,#181030);margin-left:-8px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .ava:first-child{margin-left:0}
+  .people .more{font-size:12.5px;color:var(--muted);margin-left:6px}
+  /* register card */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+  .card h3{font-size:17px;margin-bottom:4px}
+  .card .sub{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+  .field{margin-bottom:10px}
+  .field label{display:block;font-size:11.5px;color:var(--muted);margin:0 0 4px 2px;font-weight:600}
+  .field input{width:100%;background:#0e0a1c;border:1px solid var(--line);border-radius:12px;padding:12px 13px;color:var(--ink);font-size:14.5px}
+  .field input:focus{outline:none;border-color:var(--accent)}
+  .btn{width:100%;border:0;border-radius:13px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;color:var(--accent-ink);
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 8px 22px rgba(123,72,255,.4)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+  .fine{font-size:11px;color:var(--muted);text-align:center;margin-top:9px;line-height:1.4}
+  /* pricing */
+  .plans{display:flex;flex-direction:column;gap:12px;margin-top:2px}
+  .plan{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;position:relative}
+  .plan.pro{border-color:rgba(155,107,255,.6);background:linear-gradient(160deg,rgba(155,107,255,.12),var(--surface))}
+  .plan .pt{font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+  .plan.pro .pt{color:var(--accent-2)}
+  .plan .price{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:4px 0 2px}
+  .plan .price small{font-size:14px;color:var(--muted);font-weight:600}
+  .plan ul{list-style:none;margin:10px 0 14px;display:flex;flex-direction:column;gap:7px}
+  .plan li{font-size:13px;display:flex;gap:8px;align-items:flex-start}
+  .plan li::before{content:"✓";color:var(--good);font-weight:800}
+  .pay-row{display:flex;gap:9px}
+  .pay-row .btn{flex:1;font-size:13.5px;padding:12px 8px;display:flex;align-items:center;justify-content:center;gap:7px}
+  .pay-row .btn.stars{background:linear-gradient(135deg,#f5c451,#f0a93a);color:#3a2a06}
+  .badge-pop{position:absolute;top:-10px;right:14px;font-size:10.5px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,var(--accent),#5b34c9);padding:3px 10px;border-radius:999px}
+  /* return banner */
+  .ret{margin-top:22px;background:linear-gradient(150deg,#10233a,#0c1626);border:1px solid #1d3b57;border-radius:18px;
+    padding:14px 15px;display:flex;align-items:center;gap:12px}
+  .ret .rl{flex:1}
+  .ret b{font-size:14px}
+  .ret p{font-size:12px;color:#9fc0e0;margin:2px 0 0}
+  .ret a{flex:none;text-decoration:none;color:#04211f;font-weight:800;font-size:13px;background:linear-gradient(135deg,#2ac3ef,#57d2f5);
+    padding:10px 14px;border-radius:12px;white-space:nowrap}
+  .foot{text-align:center;color:var(--muted);font-size:11px;margin-top:22px;opacity:.7}
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+    background:#221641;color:#fff;border:1px solid var(--accent);border-radius:12px;padding:11px 16px;font-size:13px;z-index:60;
+    transition:opacity .2s,transform .2s;max-width:88%;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <a class="back" href="index.html" id="backCasario">← Casario</a>
+    <div class="blogo"><span class="mark">🗣️</span><b>Beli<span>go</span></b></div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="globe">🌍</div>
+      <div class="badge">Часть экосистемы Casario</div>
+      <h1>Учи язык и общайся с <span>носителями</span> по всему миру</h1>
+      <p>Языковой обмен, живые чаты и AI-ассистент. Практикуй язык новой страны и находи своих ещё до переезда.</p>
+    </div>
+
+    <div class="dl">
+      <a href="#reg" data-store="ios"><span class="em"></span><span class="st"><small>Скачать в</small>App&nbsp;Store</span></a>
+      <a href="#reg" data-store="android"><span class="em">▶</span><span class="st"><small>Доступно в</small>Google&nbsp;Play</span></a>
+    </div>
+    <div class="people">
+      <span class="ava">🇧🇷</span><span class="ava">🇪🇸</span><span class="ava">🇺🇾</span><span class="ava">🇦🇷</span><span class="ava">🇲🇽</span><span class="ava">🇮🇹</span>
+      <span class="more">+12 000 носителей онлайн</span>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h">Что внутри</div>
+      <div class="feats">
+        <div class="feat"><span class="fi">💬</span><div><b>Чат с носителями</b><p>Пиши и говори с людьми из страны, куда ты едешь — исправят и подскажут.</p></div></div>
+        <div class="feat"><span class="fi">🤖</span><div><b>AI-ассистент 24/7</b><p>Тренируй диалоги, разбирай ошибки и учи слова в своём темпе.</p></div></div>
+        <div class="feat"><span class="fi">🎧</span><div><b>Живая практика</b><p>Голосовые и видеозвонки, языковой обмен — ты помогаешь со своим, тебе с новым.</p></div></div>
+        <div class="feat"><span class="fi">🤝</span><div><b>Свои в новой стране</b><p>Знакомься с релокантами и местными, находи друзей ещё до переезда.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sec" id="reg">
+      <div class="sec-h">Регистрация</div>
+      <div class="card">
+        <h3>Создай аккаунт Beligo</h3>
+        <div class="sub">Одна учётка — вход и в Beligo, и в Casario.</div>
+        <div class="field"><label>Имя</label><input id="rName" type="text" placeholder="Как тебя зовут" autocomplete="name"></div>
+        <div class="field"><label>Email</label><input id="rEmail" type="email" placeholder="you@email.com" autocomplete="email" inputmode="email"></div>
+        <button class="btn" id="regBtn">Зарегистрироваться →</button>
+        <div class="fine">Регистрируясь, ты соглашаешься с Условиями и Политикой конфиденциальности Beligo.</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h">Тарифы</div>
+      <div class="plans">
+        <div class="plan">
+          <div class="pt">Free</div>
+          <div class="price">$0</div>
+          <ul><li>Чаты с носителями</li><li>10 минут AI-практики в день</li><li>Языковой обмен</li></ul>
+          <button class="btn ghost" id="freeBtn">Начать бесплатно</button>
+        </div>
+        <div class="plan pro">
+          <span class="badge-pop">Популярный</span>
+          <div class="pt">Premium</div>
+          <div class="price">$8 <small>/ месяц</small></div>
+          <ul><li>Безлимитный AI-ассистент</li><li>Видео- и голосовые звонки</li><li>Приоритет в подборе собеседников</li><li>Без рекламы</li></ul>
+          <div class="pay-row">
+            <button class="btn" data-pay="card">💳 Картой</button>
+            <button class="btn stars" data-pay="stars">⭐ Stars</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ret">
+      <div class="rl"><b>Ищешь жильё?</b><p>Возвращайся в Casario — жильё по всей Латинской Америке.</p></div>
+      <a href="index.html">Открыть Casario →</a>
+    </div>
+
+    <div class="foot">Beligo · языковой обмен и знакомства · часть Casario</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var toastEl=document.getElementById('toast'),toastT=null;
+  function toast(msg){ toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){ toastEl.classList.remove('show'); },2600); }
+
+  // --- локальное «хранилище» аккаунта (демо; на бэке — Supabase, как в Casario) ---
+  var LS={ get:function(k,d){ try{ var v=localStorage.getItem('beligo:'+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+           set:function(k,v){ try{ localStorage.setItem('beligo:'+k, JSON.stringify(v)); }catch(e){} } };
+
+  // --- Оплата: Telegram Stars (в мини-аппе) или карта (Stripe), демо-фолбэк ---
+  var TG=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+  try{ if(TG&&TG.ready) TG.ready(); }catch(e){}
+  var PAY={
+    checkout:function(o,onOk){
+      var inTG=!!(TG&&TG.initData);
+      if(o.method==='stars'||inTG){
+        // в реальном мини-аппе: createInvoiceLink(XTR) через Edge Function, здесь — демо
+        if(inTG&&TG.showPopup){ TG.showPopup({title:'Beligo Premium',message:o.title+'\n≈ '+Math.round(o.usd*100)+' ⭐',buttons:[{id:'ok',type:'default',text:'Оплатить ⭐'},{type:'cancel'}]},function(id){ if(id==='ok'){ toast('Оплата отправлена ⭐'); onOk&&onOk(); } }); return; }
+        toast('Telegram Stars — в приложении Beligo ⭐'); onOk&&onOk(); return;
+      }
+      // карта → Stripe Checkout (на живом бэке); демо-фолбэк
+      toast('Открываю оплату картой 💳 — $'+o.usd+'/мес'); onOk&&onOk();
+    }
+  };
+  window.PAY=PAY;
+
+  function grantPremium(){ LS.set('plan','premium'); toast('Готово! Premium активен 🎉'); }
+
+  // регистрация
+  document.getElementById('regBtn').addEventListener('click',function(){
+    var name=(document.getElementById('rName').value||'').trim();
+    var email=(document.getElementById('rEmail').value||'').trim();
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Введите корректный email'); return; }
+    LS.set('account',{name:name,email:email});
+    toast('Аккаунт создан! Проверьте почту ✉️');
+  });
+  // если уже зарегистрирован — подставим
+  var acc=LS.get('account',null);
+  if(acc){ if(acc.name) document.getElementById('rName').value=acc.name; if(acc.email) document.getElementById('rEmail').value=acc.email; }
+
+  document.getElementById('freeBtn').addEventListener('click',function(){ LS.set('plan','free'); toast('Бесплатный план активен — добро пожаловать!'); location.hash='#reg'; });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-pay]'),function(b){
+    b.addEventListener('click',function(){ PAY.checkout({sku:'beligo_premium',title:'Beligo Premium — $8/мес',usd:8,method:b.getAttribute('data-pay')}, grantPremium); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-store]'),function(a){
+    a.addEventListener('click',function(){ toast('Приложение скоро в сторах — пока регистрируйся здесь 👇'); });
+  });
+})();
+</script>
+</body>
+</html>

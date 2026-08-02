@@ -38,6 +38,7 @@ jobs:
         run: |
           mkdir -p _site
           cp casario-prototype.html _site/index.html
+          cp beligo.html _site/beligo.html 2>/dev/null || true
           cp *.mp4 _site/splash.mp4 2>/dev/null || true
 
       - name: Configure Pages

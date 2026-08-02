@@ -2708,7 +2708,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
 
   // ---- Реклама (ротатор: до 5 в сутки, крутится по кругу) ----
   var ADS=[
-    {brand:'Beligo', prem:true, head:'Beligo — языковой обмен и знакомства', bullets:['Практикуй языки с носителями','Заводи друзей по всему миру','Находи своих в новой стране'], cta:'Открыть Beligo', hue:270, emo:'💬', url:'https://beligo.app'},
+    {brand:'Beligo', prem:true, head:'Beligo — языковой обмен и знакомства', bullets:['Практикуй языки с носителями','Заводи друзей по всему миру','Находи своих в новой стране'], cta:'Открыть Beligo', hue:270, emo:'💬', url:'beligo.html'},
     {brand:'Lex Migrar', head:'ВНЖ и монотрибуто под ключ', bullets:['Оформление за 2 недели','Сопровождение на русском','Без визита в офис'], cta:'Консультация', hue:210, emo:'📄', url:'https://www.google.com/search?q=asesoria+migratoria+residencia+latinoamerica'},
     {brand:'MudanzaYa', head:'Переезд и хранение вещей', bullets:['Забор из аэропорта','Склад под ключ','Страховка груза'], cta:'Рассчитать', hue:150, emo:'📦', url:'https://www.google.com/search?q=mudanza+internacional+deposito'},
     {brand:'Casa Rusa', head:'Русские продукты в Латам', bullets:['Гречка, творог, специи','Доставка на дом','Заказ в 2 клика'], cta:'Смотреть меню', hue:14, emo:'🥟', url:'https://www.google.com/search?q=productos+rusos+tienda+entrega'},
@@ -2925,7 +2925,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       'Уругвай':[['🇺🇾 Уругвай — чат релокантов','https://t.me/uruguay_ru_chat'],['💅 Бьюти-мастера Уругвая','https://t.me/beauty_uruguay_chat_ru']],
       'Чили':[['🇨🇱 Чили — чат релокантов','https://t.me/chile_chat_ru']]
     };
-    function beligoCTA(){ return '<div class="guide-cta beligo"><b>📱 Учи язык с Beligo</b><p>Изучай язык легко и когда удобно — AI-ассистент и носители из разных стран помогут тебе!</p><a class="cta gc-btn" href="https://www.google.com/search?q=Beligo+app+intercambio+de+idiomas" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">Открыть Beligo →</a></div>'; }
+    function beligoCTA(){ return '<div class="guide-cta beligo"><b>📱 Учи язык с Beligo</b><p>Изучай язык легко и когда удобно — AI-ассистент и носители из разных стран помогут тебе!</p><a class="cta gc-btn" href="beligo.html" style="display:block;text-align:center;text-decoration:none;box-sizing:border-box">Открыть Beligo →</a></div>'; }
     function legalCTA(name){ return '<div class="guide-cta legal"><b>📄 Нужна помощь в легализации?</b><p>Опишите ситуацию — сколько вас, бюджет, что и где хотите оформить. Свяжем с поддержкой, оператор всё подскажет.</p><button class="cta gc-btn" data-cta="legal" data-country="'+name+'">Написать в поддержку →</button></div>'; }
     function emergCTA(name){ var rows=EMERG[name]||[['🚨 Единый номер','911']];
       return '<div class="guide-emerg"><b>☎️ Экстренные номера ('+name+'):</b><span class="cw-hint" style="display:block;margin:2px 0 6px">⚠️ Проверяйте актуальность номеров.</span><div class="emerg-rows">'+rows.map(function(r){return '<div class="emerg-row">'+r[0]+' — <span class="num">'+r[1]+'</span></div>';}).join('')+'</div></div>'; }
