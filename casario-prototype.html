@@ -3174,6 +3174,17 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       document.getElementById('convRub').textContent=fmtN(rub)+' ₽';
     }
     convAmt.addEventListener('input',convCalc); convCur.addEventListener('change',convCalc); convCalc();
+    // live-курс: бесплатный API без ключа; при сбое остаются ориентировочные значения выше
+    (function(){ var hint=document.querySelector('.conv-h .hint');
+      fetch('https://open.er-api.com/v6/latest/USD').then(function(r){return r.json();}).then(function(j){
+        if(!j||j.result!=='success'||!j.rates) return;
+        Object.keys(RATES).forEach(function(k){ var v=j.rates[k]; if(typeof v==='number'&&v>0) RATES[k].r=v; });
+        if(typeof j.rates.RUB==='number'&&j.rates.RUB>0) USDRUB=j.rates.RUB;
+        convCalc();
+        if(hint){ var d=(j.time_last_update_utc||'').slice(0,16); var en=(typeof _curL!=='undefined'&&_curL==='en');
+          hint.textContent=(en?'live rate':'курс live')+(d?' · '+d:''); }
+      }).catch(function(){});
+    })();
   }
 
   // ---- PRO hero + «Связаться» ----
