@@ -2153,13 +2153,43 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   };
   function hrefDom(u){ return u.replace(/^https?:\/\//,'').split('/')[0].replace(/^www\./,''); }
   var paid=false;
+  // ---- живые объявления из Supabase (реальные, от владельцев) ----
+  var _live=[];
+  function _esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function _contactHref(c){ c=String(c||'').trim(); if(!c) return '#';
+    if(/^https?:\/\//i.test(c)) return c;
+    if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c)) return 'mailto:'+c;
+    if(/^@[A-Za-z0-9_]{3,}$/.test(c)) return 'https://t.me/'+c.slice(1);
+    var digits=c.replace(/[^\d]/g,''); if(digits.length>=8) return 'https://wa.me/'+digits;
+    return '#'; }
+  function _loadLive(done){ _live=[];
+    if(!(window.CB&&CB.on&&CB.listListings)){ done&&done(); return; }
+    var _cn=(document.getElementById('country')||{}).value||'';
+    CB.listListings(_cn).then(function(list){ if(list&&list.length) _live=list; done&&done(); }).catch(function(){ done&&done(); }); }
+  function _liveHtml(){ if(!_live.length) return '';
+    return '<div class="demo-note" style="border-color:#2f7d55;background:rgba(47,125,85,.12);color:#bfe6cf">✅ <b>'+_live.length+' реальных объявлений</b> от владельцев в базе Casario — прямой контакт, без посредников.</div>'+
+      _live.map(function(d){
+        var _t=_esc(d.title||'Объявление'), _l=_esc(d.loc||d.country||''), _pr=_esc(d.price||''), _ds=_esc(d.descr||'');
+        var _c=String(d.contact||'').trim();
+        var link=(paid||isPRO)
+          ? (_c? '<a class="cr-link" href="'+_esc(_contactHref(_c))+'" target="_blank" rel="noopener">📞 Связаться с владельцем: '+_esc(_c)+' →</a>'
+                : '<span class="cr-link" style="opacity:.7">Контакт не указан</span>')
+          : '<button type="button" class="cr-link locked" data-paylink="1">🔒 Открыть контакт владельца · $5</button>';
+        return '<div class="card-r live" style="border-color:rgba(47,125,85,.5)">'+
+          '<span class="toptag" style="background:#2f7d55">✅ РЕАЛЬНОЕ ОБЪЯВЛЕНИЕ</span>'+
+          '<div class="cr-top"><div><div class="cr-hood">'+_t+'</div><div class="cr-type">'+_l+'</div></div>'+
+          (_pr!==''?'<div class="cr-price"><b>'+_pr+'</b></div>':'')+'</div>'+
+          (_ds?'<p class="cr-note">'+_ds+'</p>':'')+
+          link+'</div>';
+      }).join('');
+  }
   function _curBudget(){var mn=parseInt((document.getElementById('pmin')||{}).value,10)||0,mx=parseInt((document.getElementById('pmax')||{}).value,10)||1e9;if(mx<mn){var t=mn;mn=mx;mx=t;}return [mn,mx];}
   function _shown(){var b=_curBudget();var r=data.filter(function(d){return d.price>=b[0]*0.88&&d.price<=b[1]*1.12;});return r.length?r:data;}
   function render(){
     var box=document.getElementById('cards');
     var _list=_shown();var _cn=(document.getElementById('country')||{}).value||'';
     var _demo='<div class="demo-note">🧪 <b>Демо-подборка</b> — пример данных'+((_cn&&_cn!=='Аргентина')?' (показан пример по Буэнос-Айресу)':'')+'. В рабочей версии каждая карточка — реальное найденное объявление с прямой ссылкой на <b>конкретную квартиру</b>. Здесь примеры, поэтому ссылка открывает объявления этого района на портале.</div>';
-    box.innerHTML=_demo+_list.map(function(d,idx){
+    box.innerHTML=_liveHtml()+_demo+_list.map(function(d,idx){
       var tags=d.tags.map(function(t){return '<span class="tag'+(t[1]?' hi':'')+'">'+t[0]+'</span>';}).join('');
       var _ph='https://picsum.photos/seed/casa'+idx+'/640/360';var photo='<div class="cr-photo" style="background:linear-gradient(135deg,hsl('+d.hue+' 52% 44%),hsl('+((d.hue+40)%360)+' 58% 30%))"><img class="cr-ph-img" src="'+_ph+'" alt="" loading="lazy" decoding="async" onerror="this.remove()"><span class="cr-emo">'+d.emo+'</span><span class="cr-gal">📷 '+d.ph+' фото</span></div>';
       var href=HREF[d.hood]||('https://'+d.url);
@@ -2196,8 +2226,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       i++;
       if(i<=sites.length){ setTimeout(tick, step); }
       else {
-        ov.classList.remove('show');
-        revealResults(); // варианты показываем сразу и бесплатно; $10 — только чтобы открыть ссылки-первоисточники
+        _loadLive(function(){ render(); ov.classList.remove('show'); revealResults(); }); // подтягиваем реальные объявления из базы + показываем варианты
       }
     })();
   }
