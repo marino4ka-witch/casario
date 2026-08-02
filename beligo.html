@@ -158,7 +158,7 @@
         <div class="plan pro">
           <span class="badge-pop">Популярный</span>
           <div class="pt">Premium</div>
-          <div class="price">$8 <small>/ месяц</small></div>
+          <div class="price">$20 <small>/ месяц</small></div>
           <ul><li>Безлимитный AI-ассистент</li><li>Видео- и голосовые звонки</li><li>Приоритет в подборе собеседников</li><li>Без рекламы</li></ul>
           <div class="pay-row">
             <button class="btn" data-pay="card">💳 Картой</button>
@@ -222,7 +222,7 @@
   document.getElementById('freeBtn').addEventListener('click',function(){ LS.set('plan','free'); toast('Бесплатный план активен — добро пожаловать!'); location.hash='#reg'; });
 
   Array.prototype.forEach.call(document.querySelectorAll('[data-pay]'),function(b){
-    b.addEventListener('click',function(){ PAY.checkout({sku:'beligo_premium',title:'Beligo Premium — $8/мес',usd:8,method:b.getAttribute('data-pay')}, grantPremium); });
+    b.addEventListener('click',function(){ PAY.checkout({sku:'beligo_premium',title:'Beligo Premium — $20/мес',usd:20,method:b.getAttribute('data-pay')}, grantPremium); });
   });
   Array.prototype.forEach.call(document.querySelectorAll('[data-store]'),function(a){
     a.addEventListener('click',function(){ toast('Приложение скоро в сторах — пока регистрируйся здесь 👇'); });
