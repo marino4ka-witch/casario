@@ -1880,7 +1880,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       _sv.addEventListener('ended', _hideSplash);
       _sv.addEventListener('error', function(){ setTimeout(_hideSplash, 2000); }); // видео не отдалось (превью) → показать SVG-заставку и скрыть
       try{ var _pr=_sv.play(); if(_pr&&_pr.catch)_pr.catch(function(){ setTimeout(_hideSplash,2000); }); }catch(e){ setTimeout(_hideSplash,2000); }
-      setTimeout(_hideSplash, 9000); // страховка на случай если 'ended' не сработал
+      setTimeout(_hideSplash, 14000); // страховка (видео ~8с + буфер) — не обрезаем анимацию
     } else {
       setTimeout(_hideSplash, _reduce?400:2300);
     }
