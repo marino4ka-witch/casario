@@ -256,6 +256,8 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
   .ncats{display:flex;gap:7px;overflow-x:auto;padding:6px 16px 10px}
   .ncat{flex:none;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font-family:inherit;font-size:12.5px;padding:7px 12px;border-radius:20px;cursor:pointer;white-space:nowrap}
   .ncat[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#042231}
+  .nmap-frame{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2;background:#0d1a26}
+  .nmap-fallback{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:14px}
   .nmap{position:relative;height:220px;border-radius:16px;margin:4px 16px 12px;overflow:hidden;border:1px solid var(--line);
     background:radial-gradient(circle at 50% 45%, color-mix(in srgb,var(--accent) 15%,var(--surface-2)), var(--surface-2))}
   .nmap .grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px;opacity:.3}
@@ -1375,7 +1377,7 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
     <div style="padding:0 16px 8px;display:flex;gap:8px;align-items:center">
       <input type="text" id="nearQuery" placeholder="или напишите, что ищете…" style="flex:1">
     </div>
-    <div class="nmap" id="nmap"><div class="grid"></div><div class="me">🧍</div><a class="nmap-open" id="nmapOpen" target="_blank" rel="noopener">🗺️ Открыть на Google&nbsp;Картах</a></div>
+    <div class="nmap" id="nmap"><iframe id="nmapFrame" class="nmap-frame" title="Карта" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><div class="nmap-fallback" id="nmapFallback"><div class="grid"></div><div class="me">🧍</div><span>Карта откроется в приложении онлайн</span></div><a class="nmap-open" id="nmapOpen" target="_blank" rel="noopener">🗺️ Открыть на Google&nbsp;Картах</a></div>
     <div class="nlist" id="nlist"></div>
   </div>
 
@@ -1920,7 +1922,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var onb=document.getElementById('onb'); if(!onb) return;
     function refreshLangs(){ var b=onb.querySelectorAll('.onb-langs button');
       for(var i=0;i<b.length;i++){ b[i].classList.toggle('on', b[i].getAttribute('data-l')===langs[li]); } }
-    function hideOnb(){ onb.classList.add('hide'); LS.set('onboarded',1); setTimeout(function(){ onb.style.display='none'; },520); }
+    function hideOnb(){ onb.classList.add('hide'); setTimeout(function(){ onb.style.display='none'; },520); }
     // языки RU|ES|EN → та же машинерия, что и langBtn
     var lp=onb.querySelectorAll('.onb-langs button');
     for(var i=0;i<lp.length;i++){ (function(btn){ btn.addEventListener('click',function(){
@@ -1939,7 +1941,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var g=document.getElementById('onbGoogle'); if(g) g.addEventListener('click',function(){ social('google','Google'); });
     var a=document.getElementById('onbApple'); if(a) a.addEventListener('click',function(){ social('apple','Apple'); });
     // показать после сплэша, если ещё не входили и не закрывали
-    function maybeShow(){ if(_AUTH){ onb.style.display='none'; return; } if(LS.get('onboarded',0)){ onb.style.display='none'; return; }
+    function maybeShow(){ if(_AUTH){ onb.style.display='none'; return; }
       refreshLangs(); onb.style.display='flex'; }
     var _delay=matchMedia('(prefers-reduced-motion:reduce)').matches?450:2350;
     setTimeout(maybeShow,_delay);
@@ -2124,13 +2126,13 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   function render(){
     var box=document.getElementById('cards');
     var _list=_shown();var _cn=(document.getElementById('country')||{}).value||'';
-    var _demo='<div class="demo-note">🧪 <b>Демо-подборка</b> — пример данных'+((_cn&&_cn!=='Аргентина')?' (показан пример по Буэнос-Айресу)':'')+'. В рабочей версии придут 10 проверенных вариантов точно по вашему брифу'+(_cn?(' · '+_cn):'')+'. Отфильтровано по бюджету: '+_list.length+' из '+data.length+'.</div>';
+    var _demo='<div class="demo-note">🧪 <b>Демо-подборка</b> — пример данных'+((_cn&&_cn!=='Аргентина')?' (показан пример по Буэнос-Айресу)':'')+'. В рабочей версии каждая карточка — реальное найденное объявление с прямой ссылкой на <b>конкретную квартиру</b>. Здесь примеры, поэтому ссылка открывает объявления этого района на портале.</div>';
     box.innerHTML=_demo+_list.map(function(d,idx){
       var tags=d.tags.map(function(t){return '<span class="tag'+(t[1]?' hi':'')+'">'+t[0]+'</span>';}).join('');
       var photo='<div class="cr-photo" style="background:linear-gradient(135deg,hsl('+d.hue+' 52% 44%),hsl('+((d.hue+40)%360)+' 58% 30%))"><span class="cr-emo">'+d.emo+'</span><span class="cr-gal">📷 '+d.ph+' фото</span></div>';
       var href=HREF[d.hood]||('https://'+d.url);
       var link = (paid||isPRO)
-        ? '<a class="cr-link" href="'+href+'" target="_blank" rel="noopener">Открыть на '+hrefDom(href)+' →</a>'
+        ? '<a class="cr-link" href="'+href+'" target="_blank" rel="noopener">Смотреть в '+d.hood.split(',')[0]+' на '+hrefDom(href)+' →</a>'
         : '<button type="button" class="cr-link locked" data-paylink="1">🔒 Открыть первоисточник · $10 за все ссылки</button>';
       return '<div class="card-r'+(d.top?' top':'')+'">'+
         photo+
@@ -2140,7 +2142,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
         '<div class="cr-meta"><span class="tag">'+d.m+'</span><span class="tag">'+d.br+'</span><span class="tag">'+d.furn+'</span>'+tags+'</div>'+
         '<p class="cr-note">'+d.note+'</p>'+
         link+'</div>';
-    }).join('') + ((paid||isPRO) && !moreLoaded ? '<button type="button" class="cta more10" id="showMore10">➕ Показать ещё 10 вариантов<b>'+(isPRO?' · бесплатно (PRO)':'')+'</b></button>' : ((paid||isPRO) && moreLoaded ? '<div class="more-done">✅ Показаны все найденные варианты'+(isPRO?' · PRO: 20 в день бесплатно':'')+'</div>' : ''));
+    }).join('');
   }
   var moreLoaded=false;
   render();
@@ -2629,11 +2631,13 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   function renderNear(){
     var all=collect().filter(function(o){ return !openOnly || o.pl[5]; });
     var city=nearCityVal();
-    // реальная ссылка на Google Карты по выбранному
+    // реальная карта Google + ссылка «открыть» по выбранному
     var qparts = nearQ ? [nearQ] : nearSel.map(function(c){return NEAR_TERM[c]||c;});
-    document.getElementById('nmapOpen').href = maps((qparts.join(' ')||'lugares')+' '+(city||nearCountry.value));
-    nmap.querySelectorAll('.pin').forEach(function(p){p.remove();});
-    all.forEach(function(o){ var pin=document.createElement('div'); pin.className='pin'; pin.style.left=o.pl[3]+'%'; pin.style.top=o.pl[4]+'%'; pin.textContent=o.ic; nmap.appendChild(pin); });
+    var _q=(qparts.join(' ')||'lugares')+' '+(city||nearCountry.value);
+    document.getElementById('nmapOpen').href = maps(_q);
+    var _fr=document.getElementById('nmapFrame');
+    if(_fr){ var _src='https://www.google.com/maps?z=14&output=embed&q='+encodeURIComponent(_q);
+      if(_fr.getAttribute('data-src')!==_src){ _fr.setAttribute('data-src',_src); _fr.src=_src; } }
     nlist.innerHTML = all.length ? all.map(function(){ return '<div class="nitem"><span class="nico"></span><div style="flex:1;min-width:0"><div class="nnm"></div><div class="nds"></div><div class="nopen"></div></div><a class="nrt" target="_blank" rel="noopener">🗺️ маршрут</a></div>'; }).join('') : '<div class="nds" style="padding:10px">Выберите категорию или напишите, что ищете.</div>';
     var items=nlist.querySelectorAll('.nitem');
     all.forEach(function(o,i){
