@@ -1,6 +1,6 @@
 // Casario service worker — установка на телефон + офлайн-фолбэк.
 // HTML — network-first (всегда свежий онлайн), статика — cache-first.
-const CACHE = 'casario-v1';
+const CACHE = 'casario-v2';
 const SHELL = ['./', './index.html', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon-32.png', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
@@ -24,6 +24,8 @@ self.addEventListener('fetch', (e) => {
   try { url = new URL(req.url); } catch (_) { return; }
   // Внешние запросы (Supabase, Telegram, курс валют, картинки) — не трогаем.
   if (url.origin !== self.location.origin) return;
+  // Видео заставки — всегда из сети (не кэшируем большой файл, чтобы не отдавать старую версию).
+  if (url.pathname.endsWith('.mp4')) return;
 
   // HTML-документ → network-first (свежая версия онлайн, кэш офлайн).
   if (req.mode === 'navigate' || req.destination === 'document') {
