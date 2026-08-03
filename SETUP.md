@@ -49,53 +49,62 @@ Supabase на бесплатном тарифе шлёт письма со св�
 для теста хватает. Для продакшена подключи свой **SMTP**
 (Authentication → Emails → SMTP): подойдёт Resend/Brevo/SendGrid — скажи, помогу настроить.
 
-## Шаг 3. Платежи — Telegram Stars ⭐ + Stripe 💳 (код готов)
+## Шаг 3. Платежи — Telegram Stars ⭐ + крипта ₿ (код готов)
 
-Единый платёжный слой уже в приложении (`window.PAY`): внутри Telegram платит
-через **Stars**, на обычном сайте — через **Stripe** (карта). Без ключей всё
-работает как демо и ничего не ломается. Серверная часть — две готовые
-Supabase Edge Functions в `supabase/functions/`. Осталось подключить твои ключи.
+> 🇷🇺 **Без Stripe/PayPal** — с российским паспортом они недоступны. Деньги идут
+> только через **Telegram Stars** (основной способ) и **крипту (USDT TRC20 / BTC)**.
+> Кнопка «Картой» оставлена как **«скоро»** — заглушка на будущее, не через западный
+> процессинг.
 
-**Как определяется способ оплаты:** приложение открыто внутри Telegram → Stars;
-открыто как сайт → Stripe. Кнопки оплаты (подбор $10, PRO $20/мес, поднятие $2/$5)
-уже ведут в этот слой.
+Единый платёжный слой уже в приложении (`window.PAY`):
+- **внутри Telegram** (Mini App) → оплата **Stars** нативно (`openInvoice`);
+- **на обычном сайте** → кнопка Stars ведёт в бота **@casario_app_bot** (`t.me/casario_app_bot?start=pay_<товар>`), оплата там;
+- **крипта** → реквизиты USDT (когда впишешь кошелёк в `CASARIO_CFG.USDT_TRC20`).
 
-### 3.1 Telegram Stars ⭐
-1. У **@BotFather** создай бота → пришли мне (или впиши в секреты) его **token**.
-2. Включи боту приём Stars (BotFather → бот → *Payments* → Telegram Stars).
-3. Задай секреты и задеплой функцию:
+Без ключей всё работает как демо и ничего не ломается. Серверная часть — две
+Edge Functions в `supabase/functions/`: `create-invoice` (счёт на Stars) и
+`tg-webhook` (подтверждение оплаты).
+
+### 3.1 Бот и Stars ⭐
+1. Бот уже есть — **@casario_app_bot** (вписан в `CASARIO_CFG.TG_BOT`).
+2. Включи боту приём Stars: **@BotFather → бот → Payments → Telegram Stars**.
+3. Задай секреты и задеплой обе функции:
    ```bash
    supabase link --project-ref vlhexxuzhdfiklcymawj
-   supabase secrets set TELEGRAM_BOT_TOKEN=123456:ABC...
-   supabase secrets set STARS_PER_USD=60          # сколько ⭐ за $1 (подстрой под курс)
+   supabase secrets set TELEGRAM_BOT_TOKEN=123456:ABC...   # токен из @BotFather (Copy)
+   supabase secrets set STARS_PER_USD=60                   # сколько ⭐ за $1 (подстрой под курс)
+   supabase secrets set TG_WEBHOOK_SECRET=$(openssl rand -hex 16)   # запомни это значение
    supabase functions deploy create-invoice --no-verify-jwt
+   supabase functions deploy tg-webhook   --no-verify-jwt
    ```
-4. В @BotFather пропиши Mini App / кнопку меню на адрес сайта из Шага 2 —
-   и приложение откроется внутри Telegram с оплатой Stars.
-
-### 3.2 Stripe 💳 (карта на сайте)
-1. Заведи аккаунт на https://stripe.com (для реальных денег нужна верификация бизнеса;
-   для теста сразу есть `sk_test_...`).
-2. Задай секрет и задеплой функцию:
+4. Создай таблицу покупок (Supabase → SQL Editor) из
+   `supabase/migrations/20260803120000_purchases.sql`.
+5. Зарегистрируй вебхук в Telegram (один раз), подставив токен, ref и секрет:
    ```bash
-   supabase secrets set STRIPE_SECRET_KEY=sk_test_...   # позже sk_live_...
-   supabase functions deploy create-checkout --no-verify-jwt
+   curl "https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://vlhexxuzhdfiklcymawj.functions.supabase.co/tg-webhook&secret_token=<TG_WEBHOOK_SECRET>&allowed_updates=[\"pre_checkout_query\",\"message\"]"
    ```
-3. После оплаты Stripe вернёт пользователя на сайт с `?paid=<товар>` — доступ откроется.
+6. В **@BotFather → Mini Apps** пропиши адрес сайта из Шага 2 —
+   приложение откроется внутри Telegram с нативной оплатой Stars.
 
-> Пришли мне **token бота** и (когда будешь готова) **Stripe secret key** —
-> и я всё задеплою и проверю. Ключи-секреты я **не коммичу** в репозиторий.
+Что происходит при оплате: клиент зовёт `create-invoice` (с проверкой подписи
+`initData`) → получает ссылку → `openInvoice` → Telegram проводит оплату →
+`tg-webhook` отвечает на `pre_checkout_query` и записывает покупку в `purchases`.
 
-> Безопасность на будущее: для продакшена стоит добавить проверку Telegram `initData`
-> (HMAC по токену бота) и Stripe-webhook, чтобы доступ выдавался по подтверждению
-> с сервера, а не только по возврату на клиент. Скажи — добавлю.
+### 3.2 Крипта ₿ (USDT TRC20 / BTC)
+1. Заведи кошелёк (например USDT TRC20).
+2. Впиши адрес в `casario-prototype.html` → `window.CASARIO_CFG.USDT_TRC20 = "T..."`.
+3. Кнопка «₿ Крипта» покажет пользователю адрес и сумму; подтверждение перевода
+   пока ручное (автосверку по блокчейну добавим позже — скажи).
+
+> Пришли мне **токен бота** через секреты (не в чат!) — и я задеплою и проверю
+> оплату вживую. Секреты я **не коммичу** в репозиторий.
 
 ## Что делаю я (весь код)
 - Вход по email (magic link) + анонимный режим для «просто посмотреть».
 - Облачные: профиль, объявления (общие, с модерацией), чат по странам (realtime), заявки на подбор.
 - Честный **поиск-консьерж**: бриф → в базу → ты/агент с AI присылаешь 10 вариантов.
 - Мягкий фолбэк: без ключей всё работает как сейчас (localStorage) — ничего не ломается.
-- Платежи (Stars/Stripe) и деплой — по выбору из Шага 2.
+- Платежи (Stars/крипта) и деплой — по выбору из Шага 2.
 
 > Пиши сюда два значения из Шага 1 — и поехали делать по-настоящему.
 
