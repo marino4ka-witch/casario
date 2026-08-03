@@ -1912,6 +1912,8 @@ setTimeout(function(){if(tok===_wxTok){var h=document.getElementById('wxHint');i
 var url='https://api.open-meteo.com/v1/forecast?latitude='+co[0]+'&longitude='+co[1]+'&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto';
 fetch(url).then(function(r){return r.json();}).then(function(j){
 if(tok!==_wxTok)return;var c=j&&j.current;if(!c)return;
+// точный оффсет таймзоны (с учётом лета/DST) → используют часы гида
+if(typeof j.utc_offset_seconds==='number'){ window.__liveTZ=window.__liveTZ||{}; window.__liveTZ[name]=j.utc_offset_seconds/3600; }
 var k=_wmoKind(c.weather_code),t=Math.round(c.temperature_2m),f=Math.round(c.apparent_temperature!=null?c.apparent_temperature:c.temperature_2m);
 var hum=c.relative_humidity_2m,wind=Math.round(c.wind_speed_10m),el;
 if((el=document.getElementById('wxTemp')))el.textContent=t+'°';
@@ -3072,7 +3074,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var TZ={'Уругвай':-3,'Аргентина':-3,'Чили':-4,'Парагвай':-4,'Бразилия':-3,'Мексика':-6,'Колумбия':-5,'Перу':-5,'Венесуэла':-4,'Эквадор':-5,'Панама':-5,'Коста-Рика':-6,'Боливия':-4,'Доминикана':-4,'Куба':-4,'Гватемала':-6,'Гондурас':-6,'Никарагуа':-6,'Сальвадор':-6,'Испания':2};
     var clockTimer=null;
     function nowMsUTC(){ try{ var t=Date.now(); if(typeof t==='number'&&t>16e11) return t; }catch(e){} try{ return performance.timeOrigin+performance.now(); }catch(e2){} return 0; }
-    function fmtClock(name){ var off=TZ[name]; if(off==null) off=-3; var local=nowMsUTC()+off*3600000; var sec=Math.floor(local/1000);
+    function fmtClock(name){ var off; var lt=window.__liveTZ&&window.__liveTZ[name]; if(lt!=null){ off=lt; } else { off=TZ[name]; if(off==null) off=-3; } var local=nowMsUTC()+off*3600000; var sec=Math.floor(local/1000);
       var h=((Math.floor(sec/3600)%24)+24)%24, m=((Math.floor(sec/60)%60)+60)%60, s=((sec%60)+60)%60;
       function p(n){ return n<10?'0'+n:''+n; } return {h:p(h),m:p(m),sec:s,hour:h}; }
     function startClock(name){ if(clockTimer){ clearInterval(clockTimer); clockTimer=null; }
