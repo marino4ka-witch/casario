@@ -927,7 +927,7 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
         <button class="onb-b social" id="onbGoogle"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1Z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84Z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z"/></svg> Продолжить с Google</button>
         <button class="onb-b social" id="onbApple"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.05 12.04c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.9-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.79 1.3 10.34.86 1.25 1.88 2.65 3.22 2.6 1.29-.05 1.78-.83 3.34-.83 1.55 0 2 .83 3.37.81 1.39-.03 2.27-1.27 3.12-2.53.98-1.45 1.39-2.85 1.41-2.92-.03-.01-2.71-1.04-2.74-4.13Zm-2.52-7.44c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-2.99 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.01-1.44Z"/></svg> Продолжить с Apple</button>
       </div>
-      <div class="onb-fine2">Продолжая, вы соглашаетесь с Условиями использования и Политикой конфиденциальности Casario.</div>
+      <div class="onb-fine2">Продолжая, вы соглашаетесь с <a href="#" class="legal-link" data-legal="terms">Условиями использования</a> и <a href="#" class="legal-link" data-legal="privacy">Политикой конфиденциальности</a> Casario.</div>
       <button class="onb-skip" id="onbSkip" type="button">Посмотреть без входа →</button>
     </div>
   </div>
@@ -1709,7 +1709,66 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
     </div>
   </div>
 
-  <div class="foot">Casario · прототип · v1</div>
+  <!-- ===== ЮРИДИЧЕСКИЕ ДОКУМЕНТЫ ===== -->
+  <style>
+    .legal-link{color:var(--accent);text-decoration:underline;cursor:pointer}
+    .modal.legal{z-index:70}
+    .modal.legal .legal-card{max-width:400px;width:calc(100% - 28px);max-height:82vh;display:flex;flex-direction:column;text-align:left;padding:0;position:relative;overflow:hidden}
+    .legal-x{position:absolute;top:9px;right:9px;z-index:2;background:var(--surface);border:1px solid var(--line);color:var(--ink);width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer}
+    .legal-h{font-size:16px;font-weight:800;padding:16px 44px 12px 16px;border-bottom:1px solid var(--line)}
+    .legal-body{overflow-y:auto;padding:14px 16px 18px;-webkit-overflow-scrolling:touch}
+    .legal-body h4{font-size:13.5px;margin:14px 0 4px}
+    .legal-body p{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0 0 6px}
+    .legal-body a{color:var(--accent)}
+    .legal-upd{font-size:11px !important;color:var(--accent) !important;opacity:.9;margin-bottom:8px !important}
+  </style>
+  <div class="modal legal" id="termsModal">
+    <div class="ucard legal-card">
+      <button class="legal-x" data-legal-close="1" aria-label="Закрыть">✕</button>
+      <div class="legal-h">Условия использования Casario</div>
+      <div class="legal-body">
+        <p class="legal-upd">Черновая редакция · уточняется юристом</p>
+        <h4>1. Что такое Casario</h4>
+        <p>Casario — информационный сервис для тех, кто переезжает в Латинскую Америку и Испанию: гиды по странам, доска объявлений о жилье и услугах, комьюнити и вспомогательные сервисы. Casario <b>не является агентством недвижимости</b> и <b>не выступает стороной</b> в сделках аренды или купли-продажи между пользователями.</p>
+        <h4>2. Объявления и контакты</h4>
+        <p>Объявления, цены и контакты размещают третьи лица (владельцы, пользователи, внешние площадки). Casario не гарантирует их достоверность и актуальность. <b>Проверяйте объект и документы лично, не переводите депозиты и предоплату до осмотра.</b> Casario не несёт ответственности за действия арендодателей, продавцов и других пользователей.</p>
+        <h4>3. Платные функции</h4>
+        <p>Часть возможностей платная (например, открытие контактов подбора, подписка PRO «Кочевник», поднятие объявлений). Оплата — через <b>Telegram Stars</b> или криптовалюту. Стоимость показывается до оплаты. Возврат возможен по обращению в поддержку в разумных и обоснованных случаях.</p>
+        <h4>4. Правила пользователя</h4>
+        <p>Запрещены спам, мошенничество, незаконный контент, оскорбления и публикация чужих персональных данных. Casario вправе редактировать/удалять объявления и сообщения, ограничивать доступ и блокировать нарушителей.</p>
+        <h4>5. Ответственность</h4>
+        <p>Сервис предоставляется «как есть». В пределах, допустимых законом, Casario не отвечает за косвенные убытки, упущенную выгоду и последствия решений, принятых на основе информации в приложении.</p>
+        <h4>6. Изменения</h4>
+        <p>Условия могут обновляться; актуальная редакция всегда доступна в приложении. Продолжая пользоваться Casario, вы принимаете изменения.</p>
+        <h4>7. Контакты</h4>
+        <p>Поддержка: <a href="https://t.me/casario_app_bot" target="_blank" rel="noopener">@casario_app_bot</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal legal" id="privacyModal">
+    <div class="ucard legal-card">
+      <button class="legal-x" data-legal-close="1" aria-label="Закрыть">✕</button>
+      <div class="legal-h">Политика конфиденциальности Casario</div>
+      <div class="legal-body">
+        <p class="legal-upd">Черновая редакция · уточняется юристом</p>
+        <h4>1. Какие данные мы обрабатываем</h4>
+        <p>— email (для входа по ссылке);<br>— данные профиля: имя/ник, страна, город, «о себе», аватар;<br>— ваши объявления, сообщения в комьюнити и заявки на подбор;<br>— при оплате через Telegram — ваш Telegram ID/username и факт платежа (сумма в Stars, идентификатор платежа). <b>Данные банковских карт мы не получаем и не храним.</b></p>
+        <h4>2. Где хранятся данные</h4>
+        <p>В облачной базе Supabase. Платежи Telegram Stars обрабатывает Telegram по своим правилам; переводы в криптовалюте проходят в блокчейне.</p>
+        <h4>3. Зачем</h4>
+        <p>Чтобы сервис работал: вход в аккаунт, показ объявлений и чата, обработка оплат и обращений в поддержку. Мы <b>не продаём</b> ваши данные и передаём их третьим лицам только в объёме, необходимом для работы сервиса (например, Telegram — для проведения оплаты, хостинг — для хранения).</p>
+        <h4>4. Хранение в браузере</h4>
+        <p>Мы используем localStorage для сохранения ваших настроек, черновиков и состояния входа на вашем устройстве.</p>
+        <h4>5. Ваши права</h4>
+        <p>Вы можете запросить доступ к своим данным или удаление аккаунта, написав в поддержку. Мы удалим данные в разумный срок, кроме того, что обязаны хранить по закону.</p>
+        <h4>6. Контакты</h4>
+        <p>По вопросам данных: <a href="https://t.me/casario_app_bot" target="_blank" rel="noopener">@casario_app_bot</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Casario · прототип · v1 · <a href="#" class="legal-link" data-legal="terms">Условия</a> · <a href="#" class="legal-link" data-legal="privacy">Конфиденциальность</a></div>
 
   <!-- ===== BOTTOM NAV ===== -->
   <nav class="tabbar">
@@ -1731,7 +1790,7 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
         <button class="cta" id="loginSend">📧 Получить ссылку для входа</button>
         <button class="cta ghost" id="loginGuest">Пока только смотреть</button>
       </div>
-      <div class="ub" style="opacity:.7;font-size:11px;margin-top:6px">Продолжая, вы соглашаетесь с Условиями и Политикой конфиденциальности Casario.</div>
+      <div class="ub" style="opacity:.7;font-size:11px;margin-top:6px">Продолжая, вы соглашаетесь с <a href="#" class="legal-link" data-legal="terms">Условиями</a> и <a href="#" class="legal-link" data-legal="privacy">Политикой конфиденциальности</a> Casario.</div>
     </div>
   </div>
   <div class="toast" id="toast"></div>
@@ -2839,6 +2898,17 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   document.getElementById('payCard').addEventListener('click',function(){ PAY.checkout({sku:'pro',method:'card'}); });
   document.getElementById('payStars').addEventListener('click',function(){ payMethodModal.classList.remove('show'); PAY.checkout({sku:'pro',title:'PRO «Кочевник» — Stars $20/мес',usd:20}, _grantPRO); });
   payMethodModal.addEventListener('click',function(e){ if(e.target===payMethodModal) payMethodModal.classList.remove('show'); });
+  // ---- Юр. документы (Условия / Политика) ----
+  (function(){
+    function openLegal(which){ var m=document.getElementById(which==='privacy'?'privacyModal':'termsModal'); if(m){ var b=m.querySelector('.legal-body'); if(b) b.scrollTop=0; m.classList.add('show'); } }
+    document.addEventListener('click',function(e){
+      var lnk=e.target.closest&&e.target.closest('.legal-link');
+      if(lnk){ e.preventDefault(); openLegal(lnk.getAttribute('data-legal')); return; }
+      var cl=e.target.closest&&e.target.closest('[data-legal-close]');
+      if(cl){ var mm=cl.closest('.modal.legal'); if(mm) mm.classList.remove('show'); return; }
+      if(e.target.classList&&e.target.classList.contains('legal')&&e.target.classList.contains('modal')){ e.target.classList.remove('show'); }
+    });
+  })();
   // Возврат после оплаты в Telegram (?paid=<sku>) → применяем покупку и чистим URL
   (function(){ try{ var sku=(new URLSearchParams(location.search)).get('paid'); if(!sku) return;
     if(sku==='search'){ paid=true; try{render();}catch(e){} try{revealResults();}catch(e){} toast('✅ Оплата прошла — доступ открыт'); }
