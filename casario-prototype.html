@@ -10,7 +10,7 @@
 </head>
 <body>
 <script>/* Casario backend config — anon key is public-safe (RLS protects data). NEVER put the service_role key here. */
-window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPABASE_ANON:"sb_publishable_8Hh9uzl9_Agd6rTR7AKiBQ_jxN_rhC6",TG_BOT:"casario_app_bot",USDT_TRC20:""};</script>
+window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPABASE_ANON:"sb_publishable_8Hh9uzl9_Agd6rTR7AKiBQ_jxN_rhC6",TG_BOT:"casario_app_bot",USDT_TRC20:"",PAY_LIVE:false};</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -1842,12 +1842,14 @@ window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPA
             catch(e){ PAY._demo(item,onOk); } })
           .catch(function(){ PAY._demo(item,onOk); });
       }
-      // веб-браузер: Stars оплачиваются внутри Telegram → ведём в бота Casario
+      // веб-браузер: Stars оплачиваются внутри Telegram → ведём в бота Casario,
+      // но только когда платежи «боевые» (PAY_LIVE) — иначе бот ещё не принимает Stars.
       var bot=(window.CASARIO_CFG&&CASARIO_CFG.TG_BOT)||'';
-      if(bot){ var url='https://t.me/'+bot+'?start=pay_'+encodeURIComponent(item.sku);
+      var live=!!(window.CASARIO_CFG&&CASARIO_CFG.PAY_LIVE);
+      if(live&&bot){ var url='https://t.me/'+bot+'?start=pay_'+encodeURIComponent(item.sku);
         toast('Открываю оплату в Telegram ⭐'); try{ window.open(url,'_blank','noopener'); }catch(e){ location.href=url; }
         return Promise.resolve(); }
-      return PAY._demo(item,onOk);
+      return PAY._demo(item,onOk); // показ/демо: доступ открывается сразу
     },
     _crypto: function(item,onOk){ var w=(window.CASARIO_CFG&&CASARIO_CFG.USDT_TRC20)||'';
       if(w){ toast('₿ USDT (TRC20): '+w+' · сумма $'+item.usd+'. После перевода доступ откроется вручную.'); }

@@ -85,6 +85,10 @@ Edge Functions в `supabase/functions/`: `create-invoice` (счёт на Stars) 
    ```
 6. В **@BotFather → Mini Apps** пропиши адрес сайта из Шага 2 —
    приложение откроется внутри Telegram с нативной оплатой Stars.
+7. Когда всё задеплоено и бот принимает Stars — переключи флаг в
+   `casario-prototype.html`: `window.CASARIO_CFG.PAY_LIVE = true`.
+   Тогда на **сайте** кнопки оплаты начнут вести в бота (`t.me/casario_app_bot?start=pay_<товар>`).
+   Пока `PAY_LIVE:false` — сайт работает как демо (доступ открывается сразу, для показа).
 
 Что происходит при оплате: клиент зовёт `create-invoice` (с проверкой подписи
 `initData`) → получает ссылку → `openInvoice` → Telegram проводит оплату →
