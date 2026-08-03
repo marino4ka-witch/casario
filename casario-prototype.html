@@ -1968,27 +1968,32 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
   var _splash=document.getElementById('splash');
   if(_splash){
     var _sv=document.getElementById('splashVid');
-    var _hid=false; function _hideSplash(){ if(_hid)return; _hid=true; _splash.classList.add('hide'); setTimeout(function(){ _splash.style.display='none'; },700); }
+    var _hid=false, _t0=Date.now();
     var _reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    var MIN=_reduce?1400:2600;  // держим заставку не меньше этого времени — чтобы не мигала
+    function _hideNow(){ if(_hid)return; _hid=true; _splash.classList.add('hide'); setTimeout(function(){ _splash.style.display='none'; },700); }
+    function _hideSplash(){ var left=MIN-(Date.now()-_t0); if(left>0){ setTimeout(_hideNow,left); } else { _hideNow(); } }
     if(_sv && !_reduce){
+      var _played=false, _ok=false;
       _sv.addEventListener('ended', _hideSplash);
-      _sv.addEventListener('error', function(){ _hideSplash(); });
-      var _played=false;
+      _sv.addEventListener('playing', function(){ _ok=true; });
+      _sv.addEventListener('error', _hideSplash);
       function _play(){ if(_played||_hid) return; _played=true; try{ _sv.currentTime=0; }catch(e){}
         var pr=_sv.play(); if(pr&&pr.catch) pr.catch(function(){ _hideSplash(); }); } // автоплей заблокирован → дальше
       // Играем только когда видео ЗАГРУЖЕНО ПОЛНОСТЬЮ → плавно, без рывков и обрезки.
       function _fullyBuffered(){ try{ var d=_sv.duration; if(!d||!isFinite(d)) return false; var b=_sv.buffered; return b.length>0 && b.end(b.length-1) >= d-0.3; }catch(e){ return false; } }
       _sv.addEventListener('progress', function(){ if(_fullyBuffered()) _play(); });
       _sv.addEventListener('canplaythrough', function(){ if(_fullyBuffered()) _play(); });
-      // если полностью не добуферизовалось за 8с, но играть уже можно — играем (компромисс)
-      setTimeout(function(){ if(!_played && !_hid && _sv.readyState>=3) _play(); }, 8000);
-      // если данных нет вообще за 12с — не держим пользователя (логотип уже показан)
-      setTimeout(function(){ if(!_played && !_hid && _sv.readyState<1) _hideSplash(); }, 12000);
+      // играть уже можно, но полный буфер не собрался за 3.5с — стартуем
+      setTimeout(function(){ if(!_played && !_hid && _sv.readyState>=3) _play(); }, 3500);
+      // видео так и не поехало (ошибка / встроенный браузер Telegram·Instagram / эконом-режим)
+      // → снимаем заставку достойно, БЕЗ мигания (минимум времени уже соблюдён)
+      setTimeout(function(){ if(!_ok) _hideSplash(); }, 6000);
       // абсолютная страховка
-      setTimeout(_hideSplash, 24000);
-      try{ _sv.src='splash.mp4?v=3'; _sv.load(); }catch(e){ _hideSplash(); }
+      setTimeout(_hideNow, 14000);
+      try{ _sv.src='splash.mp4?v=4'; _sv.load(); }catch(e){ _hideSplash(); }
     } else {
-      setTimeout(_hideSplash, _reduce?400:2300);
+      _hideSplash();
     }
   }
   // theme toggle — ☀️ day / 🌙 night
