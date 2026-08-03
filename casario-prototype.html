@@ -301,7 +301,7 @@ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ windo
   .nopen{font-size:11px;font-weight:600;margin-top:2px}
   .nopen.op{color:var(--good)} .nopen.cl{color:#e0654f}
   /* сплэш-экран (оживший логотип) */
-  .splash{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  .splash{position:fixed;inset:0;width:100vw;height:100dvh;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
     background:radial-gradient(circle at 50% 38%,#123350,#070f18);transition:opacity .5s ease}
   .splash.hide{opacity:0;pointer-events:none}
   .splash-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#070f18}
