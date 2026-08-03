@@ -7,11 +7,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1211">
 <title>Casario — жильё в Латам</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Casario">
+<meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 <script>/* Casario backend config — anon key is public-safe (RLS protects data). NEVER put the service_role key here. */
 window.CASARIO_CFG={SUPABASE_URL:"https://vlhexxuzhdfiklcymawj.supabase.co",SUPABASE_ANON:"sb_publishable_8Hh9uzl9_Agd6rTR7AKiBQ_jxN_rhC6",TG_BOT:"casario_app_bot",USDT_TRC20:"",PAY_LIVE:false};</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>/* PWA: установка на телефон. Регистрируем SW только по http(s) — в file:///превью тихо пропускаем. */
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }</script>
 <style>
   :root{
     --bg:#eef3f2; --surface:#ffffff; --surface-2:#e7efed; --ink:#152420;
