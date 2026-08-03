@@ -304,7 +304,7 @@ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ windo
   .splash{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
     background:radial-gradient(circle at 50% 38%,#123350,#070f18);transition:opacity .5s ease}
   .splash.hide{opacity:0;pointer-events:none}
-  .splash-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;background:transparent}
+  .splash-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;background:#070f18}
   .slogo{width:118px;height:118px;object-fit:contain;filter:drop-shadow(0 0 16px rgba(63,196,245,.55))}
   .slogo .ring{transform-origin:50% 50%;animation:ringspin 2.6s ease-in-out infinite}
   .slogo .house{transform-origin:50% 56%;animation:housepop 1s ease .25s both}
@@ -1991,7 +1991,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
       setTimeout(function(){ if(!_ok) _hideSplash(); }, 6000);
       // абсолютная страховка
       setTimeout(_hideNow, 14000);
-      try{ _sv.src='splash.mp4?v=4'; _sv.load(); }catch(e){ _hideSplash(); }
+      try{ _sv.src='splash.mp4?v=5'; _sv.load(); }catch(e){ _hideSplash(); }
     } else {
       _hideSplash();
     }
