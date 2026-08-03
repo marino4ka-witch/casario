@@ -95,6 +95,11 @@ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ windo
     overflow:hidden; position:relative; align-self:flex-start;
     display:flex; flex-direction:column; min-height:calc(100vh - 60px);
   }
+  /* На телефоне — полноэкранное приложение 9:16: без полей, рамки и скруглений */
+  @media (max-width:480px){
+    body{padding:0}
+    .app{max-width:none;border:0;border-radius:0;box-shadow:none;min-height:100dvh;align-self:stretch}
+  }
   /* Topbar */
   .topbar{
     display:flex; align-items:center; gap:10px; padding:15px 18px;
