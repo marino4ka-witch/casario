@@ -60,6 +60,13 @@ Supabase на бесплатном тарифе шлёт письма со св�
 
 ## Шаг 3. Платежи — Telegram Stars ⭐ + крипта ₿ (код готов)
 
+> 👩‍💻 **Для технического помощника (5 минут):** весь код приёма Stars готов.
+> Нужно: (1) `supabase secrets set TELEGRAM_BOT_TOKEN=…` + `TG_WEBHOOK_SECRET=…`;
+> (2) `supabase functions deploy create-invoice` и `tg-webhook` (обе `--no-verify-jwt`);
+> (3) выполнить SQL `supabase/migrations/20260803120000_purchases.sql`;
+> (4) `setWebhook` (curl ниже); (5) в `casario-prototype.html` выставить
+> `CASARIO_CFG.PAY_LIVE = true`. Всё это — шаги 3.1 ниже. Токен бота — у владельца.
+
 > 🇷🇺 **Без Stripe/PayPal** — с российским паспортом они недоступны. Деньги идут
 > только через **Telegram Stars** (основной способ) и **крипту (USDT TRC20 / BTC)**.
 > Кнопка «Картой» оставлена как **«скоро»** — заглушка на будущее, не через западный
