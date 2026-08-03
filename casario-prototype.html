@@ -1971,7 +1971,7 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var _hid=false, _t0=Date.now();
     var _reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
     var MIN=_reduce?1400:2600;  // держим заставку не меньше этого времени — чтобы не мигала
-    function _hideNow(){ if(_hid)return; _hid=true; _splash.classList.add('hide'); setTimeout(function(){ _splash.style.display='none'; },700); }
+    function _hideNow(){ if(_hid)return; _hid=true; _splash.classList.add('hide'); setTimeout(function(){ _splash.style.display='none'; },700); window.__splashGone=true; try{ if(window.__onSplashDone) window.__onSplashDone(); }catch(e){} }
     function _hideSplash(){ var left=MIN-(Date.now()-_t0); if(left>0){ setTimeout(_hideNow,left); } else { _hideNow(); } }
     if(_sv && !_reduce){
       var _played=false, _ok=false;
@@ -2079,10 +2079,13 @@ if((el=document.getElementById('wxHint')))el.textContent='🟢 сейчас · �
     var g=document.getElementById('onbGoogle'); if(g) g.addEventListener('click',function(){ social('google','Google'); });
     var a=document.getElementById('onbApple'); if(a) a.addEventListener('click',function(){ social('apple','Apple'); });
     // показать после сплэша, если ещё не входили и не закрывали
-    function maybeShow(){ if(_AUTH){ onb.style.display='none'; return; }
+    var _shown=false;
+    function maybeShow(){ if(_shown) return; _shown=true; if(_AUTH){ onb.style.display='none'; return; }
       refreshLangs(); onb.style.display='flex'; }
-    var _delay=matchMedia('(prefers-reduced-motion:reduce)').matches?450:2350;
-    setTimeout(maybeShow,_delay);
+    // Онбординг показываем ТОЛЬКО после того, как заставка доиграла до конца и скрылась —
+    // иначе он (z-index 60) перекрывает ещё идущее видео (z-index 50) и «обрывает» его.
+    if(window.__splashGone){ maybeShow(); }
+    else { window.__onSplashDone=maybeShow; setTimeout(maybeShow,15000); }
     // если сессия восстановилась (пользователь уже вошёл) — прячем онбординг
     try{ if(window.CB&&CB.onAuth) CB.onAuth(function(u){ if(u){ onb.classList.add('hide'); setTimeout(function(){ onb.style.display='none'; },520); } }); }catch(e){}
   })();
