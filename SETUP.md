@@ -49,6 +49,15 @@ Supabase на бесплатном тарифе шлёт письма со св�
 для теста хватает. Для продакшена подключи свой **SMTP**
 (Authentication → Emails → SMTP): подойдёт Resend/Brevo/SendGrid — скажи, помогу настроить.
 
+### Вход через Google / Apple (по желанию)
+Кнопки уже в приложении и **сами заработают**, как только включишь провайдера —
+менять код не нужно (сейчас они мягко ведут на вход по email). Чтобы включить:
+- **Google:** Supabase → Authentication → Providers → Google → вставь Client ID/Secret
+  из Google Cloud Console (OAuth consent + Credentials), в Redirect укажи
+  `https://vlhexxuzhdfiklcymawj.supabase.co/auth/v1/callback`.
+- **Apple:** аналогично, нужен Apple Developer ($99/год) — Service ID, ключ, домен.
+Пока не включены — вход идёт по email-ссылке, это нормально для старта.
+
 ## Шаг 3. Платежи — Telegram Stars ⭐ + крипта ₿ (код готов)
 
 > 🇷🇺 **Без Stripe/PayPal** — с российским паспортом они недоступны. Деньги идут
