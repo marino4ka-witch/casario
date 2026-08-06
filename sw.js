@@ -1,6 +1,6 @@
 // Casario service worker — установка на телефон + офлайн-фолбэк.
 // HTML — network-first (всегда свежий онлайн), статика — cache-first.
-const CACHE = 'casario-v8';
+const CACHE = 'casario-v9';
 const SHELL = ['./', './index.html', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon-32.png', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
